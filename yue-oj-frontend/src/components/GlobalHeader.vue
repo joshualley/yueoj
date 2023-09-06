@@ -23,7 +23,7 @@
         </a-menu>
       </a-col>
       <a-col flex="100px">
-        <div>{{ loginUser?.username }}</div>
+        <div>{{ loginUser?.userName ?? "未登录" }}</div>
       </a-col>
     </a-row>
   </div>
@@ -34,14 +34,14 @@ import routes from "../router/routes";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 import { useStore } from "vuex";
-import { User } from "@/store/user";
+import { State, User } from "@/store/type";
 import checkAccess from "@/access/CheckAccess";
 import AccessEnum from "@/access/AccessEnum";
 
 const router = useRouter();
-const store = useStore();
+const store = useStore<State>();
 const selectedKeys = ref(["/"]);
-const loginUser: User = ref(store.state.user?.loginUser);
+const loginUser = ref(store.state.user?.loginUser);
 
 // 过滤隐藏的菜单项
 const menus = routes.filter((item) => {
@@ -50,7 +50,7 @@ const menus = routes.filter((item) => {
   }
   const access: AccessEnum = (item?.meta?.access ??
     AccessEnum.NotLogin) as AccessEnum;
-  if (!checkAccess(loginUser, access)) {
+  if (!checkAccess(loginUser.value, access)) {
     return false;
   }
   return true;

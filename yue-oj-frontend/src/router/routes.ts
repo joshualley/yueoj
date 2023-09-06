@@ -3,6 +3,23 @@ import { RouteRecordRaw } from "vue-router";
 
 const routes: Array<RouteRecordRaw> = [
   {
+    path: "/user",
+    name: "用户",
+    component: import("../layouts/UserLayout.vue"),
+    children: [
+      {
+        path: "/user/login",
+        name: "用户登录",
+        component: () => import("../views/user/LoginView.vue"),
+      },
+      {
+        path: "/user/register",
+        name: "用户注册",
+        component: () => import("../views/user/RegisterView.vue"),
+      },
+    ],
+  },
+  {
     path: "/",
     name: "浏览题目",
     component: () => import("../views/HomeView.vue"),
@@ -26,7 +43,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/about",
     name: "关于我的",
-    component: () => import("../views/HelloWorld.vue"),
+    component: () => import("../views/AboutView.vue"),
   },
 ];
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">Hello World</div>
+  <div class="about">关于页面</div>
 </template>
 
 <script setup lang="ts"></script>

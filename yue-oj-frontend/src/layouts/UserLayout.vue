@@ -1,13 +1,9 @@
-<script setup lang="ts">
-import GlobalHeader from "@/components/GlobalHeader.vue";
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <div id="basicLayout">
+  <div id="userLayout">
     <a-layout class="layout">
-      <a-layout-header class="header">
-        <GlobalHeader />
-      </a-layout-header>
+      <a-layout-header class="header"> 用户布局 </a-layout-header>
       <a-layout-content class="content">
         <router-view />
       </a-layout-content>
