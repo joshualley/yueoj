@@ -1,0 +1,1 @@
+openapi --input http://127.0.0.1:8121/api/v2/api-docs --output ./src/api --client axios
