@@ -14,6 +14,7 @@ const getters = {};
 
 const mutations = {
   updateUser(state: UserState, payload: User) {
+    console.log("更新用户信息为：", payload);
     state.loginUser = payload;
   },
 };

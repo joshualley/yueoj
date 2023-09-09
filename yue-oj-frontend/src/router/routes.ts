@@ -5,7 +5,10 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/user",
     name: "用户",
-    component: import("../layouts/UserLayout.vue"),
+    component: () => import("../layouts/UserLayout.vue"),
+    meta: {
+      hide: true,
+    },
     children: [
       {
         path: "/user/login",
@@ -23,6 +26,9 @@ const routes: Array<RouteRecordRaw> = [
     path: "/",
     name: "浏览题目",
     component: () => import("../views/HomeView.vue"),
+    meta: {
+      access: AccessEnum.NotLogin,
+    },
   },
   {
     path: "/noauth",

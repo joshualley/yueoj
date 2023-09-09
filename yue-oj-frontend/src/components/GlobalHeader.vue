@@ -23,7 +23,12 @@
         </a-menu>
       </a-col>
       <a-col flex="100px">
-        <div>{{ loginUser?.userName ?? "未登录" }}</div>
+        <div v-if="loginUser?.userRole !== AccessEnum.NotLogin">
+          {{ loginUser?.userName }}
+        </div>
+        <div v-else>
+          <a href="/user/login">未登录</a>
+        </div>
       </a-col>
     </a-row>
   </div>
@@ -42,6 +47,8 @@ const router = useRouter();
 const store = useStore<State>();
 const selectedKeys = ref(["/"]);
 const loginUser = ref(store.state.user?.loginUser);
+
+console.log(loginUser);
 
 // 过滤隐藏的菜单项
 const menus = routes.filter((item) => {

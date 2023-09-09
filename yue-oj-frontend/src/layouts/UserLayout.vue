@@ -3,35 +3,33 @@
 <template>
   <div id="userLayout">
     <a-layout class="layout">
-      <a-layout-header class="header"> 用户布局 </a-layout-header>
+      <a-layout-header class="header">
+        <div>
+          <img class="logo" src="../assets/logo.png" alt="logo" />
+          <div class="title">YUE-OJ</div>
+        </div>
+      </a-layout-header>
       <a-layout-content class="content">
         <router-view />
       </a-layout-content>
-      <a-layout-footer class="footer">
-        <a href="http://yupi.icu">@c by Jose</a>
-      </a-layout-footer>
     </a-layout>
   </div>
 </template>
 
 <style scoped>
-.layout {
-  height: 500px;
+#userLayout {
+  height: 100vh;
+  background-color: whitesmoke;
 }
+
 .header {
-  margin: 8px;
+  margin: 50px 8px 8px 8px;
+  text-align: center;
 }
 .content {
-  background: linear-gradient(to right, #eee, #000);
-  margin: 8px;
+  margin: 10px 100px;
 }
-.footer {
-  background: #efefef;
-  padding: 16px;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  text-align: center;
+.logo {
+  height: 100px;
 }
 </style>
