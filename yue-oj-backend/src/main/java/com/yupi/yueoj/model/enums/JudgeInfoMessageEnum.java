@@ -1,25 +1,36 @@
 package com.yupi.yueoj.model.enums;
 
+import org.apache.commons.lang3.ObjectUtils;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.apache.commons.lang3.ObjectUtils;
 
 /**
- * 文件上传业务类型枚举
+ * 判题信息枚举
  *
  * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
  * @from <a href="https://yupi.icu">编程导航知识星球</a>
  */
-public enum FileUploadBizEnum {
+public enum JudgeInfoMessageEnum {
 
-    USER_AVATAR("用户头像", "user_avatar");
+    ACCEPTED("成功", "Accepted"),
+    WRONG_ANSWER("答案错误", "Wrong_Answer"),
+    COMPILE_ERROR("编译错误", "Compile_Error"),
+    MEMORY_LIMIT_EXCEEDED("内存溢出", "Memory_Limit_Exceeded"),
+    TIME_LIMIT_EXCEEDED("运行超时", "Time_Limit_Exceeded"),
+    PRESENTATION_ERROR("展示错误", "Presentation_Error"),
+    OUTPUT_EXCEEDED("输出溢出", "Output_Exceeded"),
+    WAITING("等待中", "Waiting"),
+    DANGEROUS_OPERATION("危险操作", "Dangerous_Operation"),
+    RUNTIME_ERROR("运行错误", "Runtime_Error"),
+    SYSTEM_ERROR("系统错误", "System_Error");
 
     private final String text;
 
     private final String value;
 
-    FileUploadBizEnum(String text, String value) {
+    JudgeInfoMessageEnum(String text, String value) {
         this.text = text;
         this.value = value;
     }
@@ -39,11 +50,11 @@ public enum FileUploadBizEnum {
      * @param value
      * @return
      */
-    public static FileUploadBizEnum getEnumByValue(String value) {
+    public static JudgeInfoMessageEnum getEnumByValue(String value) {
         if (ObjectUtils.isEmpty(value)) {
             return null;
         }
-        for (FileUploadBizEnum anEnum : FileUploadBizEnum.values()) {
+        for (JudgeInfoMessageEnum anEnum : JudgeInfoMessageEnum.values()) {
             if (anEnum.value.equals(value)) {
                 return anEnum;
             }

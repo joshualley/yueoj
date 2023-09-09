@@ -42,7 +42,7 @@ public class QuestionAddRequest implements Serializable {
     /**
      * 判题用例 json数组
      */
-    private JudgeCase judgeCase;
+    private List<JudgeCase> judgeCase;
 
     private static final long serialVersionUID = 1L;
 }

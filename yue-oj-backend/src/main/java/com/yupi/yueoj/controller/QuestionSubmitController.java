@@ -1,11 +1,15 @@
 package com.yupi.yueoj.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yupi.yueoj.common.BaseResponse;
 import com.yupi.yueoj.common.ErrorCode;
 import com.yupi.yueoj.common.ResultUtils;
 import com.yupi.yueoj.exception.BusinessException;
-import com.yupi.yueoj.model.dto.postthumb.QuestionSubmitAddRequest;
+import com.yupi.yueoj.model.dto.questionsubmit.QuestionSubmitAddRequest;
+import com.yupi.yueoj.model.dto.questionsubmit.QuestionSubmitQueryRequest;
+import com.yupi.yueoj.model.entity.QuestionSubmit;
 import com.yupi.yueoj.model.entity.User;
+import com.yupi.yueoj.model.vo.QuestionSubmitVO;
 import com.yupi.yueoj.service.QuestionSubmitService;
 import com.yupi.yueoj.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -42,16 +46,26 @@ public class QuestionSubmitController {
      * @return resultNum 本次点赞变化数
      */
     @PostMapping("/")
-    public BaseResponse<Integer> doThumb(@RequestBody QuestionSubmitAddRequest questionSubmitAddRequest,
+    public BaseResponse<Long> doQuestionSubmit(@RequestBody QuestionSubmitAddRequest questionSubmitAddRequest,
             HttpServletRequest request) {
-        if (questionSubmitAddRequest == null || questionSubmitAddRequest.getPostId() <= 0) {
+        if (questionSubmitAddRequest == null || questionSubmitAddRequest.getQuestionId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         // 登录才能点赞
         final User loginUser = userService.getLoginUser(request);
-        long postId = questionSubmitAddRequest.getPostId();
-        int result = questionSubmitService.doQuestionSubmit(postId, loginUser);
-        return ResultUtils.success(result);
+        long questionSubmitId = questionSubmitService.doQuestionSubmit(questionSubmitAddRequest, loginUser);
+        return ResultUtils.success(questionSubmitId);
+    }
+
+    @PostMapping("/list/page")
+    public BaseResponse<Page<QuestionSubmitVO>> listQuestionSubmitByPage(@RequestBody QuestionSubmitQueryRequest questionSubmitQueryRequest,
+                                                                         HttpServletRequest request) {
+        long current = questionSubmitQueryRequest.getCurrent();
+        long size = questionSubmitQueryRequest.getPageSize();
+        Page<QuestionSubmit> page = questionSubmitService.page(new Page<>(current, size),
+                questionSubmitService.getQueryWrapper(questionSubmitQueryRequest));
+        User loginUser = userService.getLoginUser(request);
+        return ResultUtils.success(questionSubmitService.getQuestionSubmitVOPage(page, loginUser, request));
     }
 
 }

@@ -1,8 +1,10 @@
-package com.yupi.yueoj.model.dto.post;
+package com.yupi.yueoj.model.dto.questionsubmit;
+
+import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
-import lombok.Data;
 
 /**
  * 创建请求
@@ -11,22 +13,27 @@ import lombok.Data;
  * @from <a href="https://yupi.icu">编程导航知识星球</a>
  */
 @Data
-public class PostAddRequest implements Serializable {
+public class QuestionSubmitAddRequest implements Serializable {
 
     /**
-     * 标题
+     * 编程语言
      */
-    private String title;
+    private String language;
 
     /**
-     * 内容
+     * 用户代码
      */
-    private String content;
+    private String code;
 
     /**
-     * 标签列表
+     * 题目 id
      */
-    private List<String> tags;
+    private Long questionId;
+
+    /**
+     * 创建用户 id
+     */
+    private Long userId;
 
     private static final long serialVersionUID = 1L;
 }

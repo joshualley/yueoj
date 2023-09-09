@@ -16,7 +16,6 @@ import java.util.List;
 /**
  * 题目 Vo 返回给用户，过滤脱敏一些字段
  */
-@TableName(value ="question")
 @Data
 public class QuestionVO implements Serializable {
     /**

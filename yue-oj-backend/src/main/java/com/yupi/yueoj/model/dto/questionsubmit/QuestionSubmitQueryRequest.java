@@ -1,10 +1,10 @@
 package com.yupi.yueoj.model.dto.questionsubmit;
 
+import com.yupi.yueoj.common.PageRequest;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
 
 /**
  * 创建请求
@@ -13,7 +13,8 @@ import java.util.List;
  * @from <a href="https://yupi.icu">编程导航知识星球</a>
  */
 @Data
-public class QuestionSubmitAddRequest implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class QuestionSubmitQueryRequest extends PageRequest implements Serializable {
 
     /**
      * 编程语言
@@ -23,7 +24,7 @@ public class QuestionSubmitAddRequest implements Serializable {
     /**
      * 用户代码
      */
-    private String code;
+    private Integer status;
 
     /**
      * 题目 id
