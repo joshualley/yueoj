@@ -22,6 +22,7 @@ const routes: Array<RouteRecordRaw> = [
       },
     ],
   },
+  // 题目模块
   {
     path: "/",
     name: "浏览题目",
@@ -31,6 +32,31 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
+    path: "/add/question",
+    name: "创建题目",
+    component: () => import("../views/question/AddOrUpdateQuestionView.vue"),
+    meta: {
+      access: AccessEnum.Admin,
+    },
+  },
+  {
+    path: "/update/question",
+    name: "修改题目",
+    component: () => import("../views/question/AddOrUpdateQuestionView.vue"),
+    meta: {
+      access: AccessEnum.Admin,
+    },
+  },
+  {
+    path: "/manage/question",
+    name: "管理题目",
+    component: () => import("../views/question/ManageQuestionView.vue"),
+    meta: {
+      access: AccessEnum.Admin,
+    },
+  },
+
+  {
     path: "/noauth",
     name: "没权限",
     component: () => import("../views/NoAuthView.vue"),
@@ -39,16 +65,8 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-    path: "/admin",
-    name: "管理员",
-    component: () => import("../views/AdminView.vue"),
-    meta: {
-      access: AccessEnum.Admin,
-    },
-  },
-  {
     path: "/about",
-    name: "关于我的",
+    name: "关于",
     component: () => import("../views/AboutView.vue"),
   },
 ];

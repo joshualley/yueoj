@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import * as monaco from "monaco-editor";
-import { ref, defineProps, withDefaults, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 
 interface Props {
   code: string;
@@ -49,5 +49,6 @@ onMounted(() => {
 <style scoped>
 #codeEditor {
   min-height: 400px;
+  width: 100%;
 }
 </style>

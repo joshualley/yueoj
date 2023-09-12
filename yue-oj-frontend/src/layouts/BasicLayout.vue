@@ -20,19 +20,23 @@ import GlobalHeader from "@/components/GlobalHeader.vue";
 
 <style scoped>
 .layout {
-  height: 500px;
+  min-height: 500px;
 }
 .header {
-  margin: 8px;
+  margin: 0 10px;
+  background: white;
+  position: sticky;
+  top: 0;
+  z-index: 99;
 }
 .content {
-  background: linear-gradient(to right, #eee, #000);
+  background: whitesmoke;
   margin: 8px;
 }
 .footer {
   background: #efefef;
   padding: 16px;
-  position: absolute;
+  position: fixed;
   bottom: 0;
   left: 0;
   right: 0;

@@ -39,7 +39,7 @@ import routes from "../router/routes";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 import { useStore } from "vuex";
-import { State, User } from "@/store/type";
+import { State } from "@/store/type";
 import checkAccess from "@/access/CheckAccess";
 import AccessEnum from "@/access/AccessEnum";
 
