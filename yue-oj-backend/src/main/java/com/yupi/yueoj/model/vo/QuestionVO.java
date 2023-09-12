@@ -4,6 +4,7 @@ import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.yupi.yueoj.model.dto.question.JudgeCase;
 import com.yupi.yueoj.model.dto.question.JudgeConfig;
 import com.yupi.yueoj.model.entity.Question;
 import lombok.Data;
@@ -59,6 +60,11 @@ public class QuestionVO implements Serializable {
     private JudgeConfig judgeConfig;
 
     /**
+     * 判题配置 json对象
+     */
+    private List<JudgeCase> judgeCase;
+
+    /**
      * 点赞数
      */
     private Integer thumbNum;
@@ -106,7 +112,10 @@ public class QuestionVO implements Serializable {
         if (tagList != null) {
             question.setTags(JSONUtil.toJsonStr(tagList));
         }
-
+        List<JudgeCase> judgeCaseList = questionVO.getJudgeCase();
+        if (judgeCaseList != null) {
+            question.setJudgeCase(JSONUtil.toJsonStr(judgeCaseList));
+        }
         JudgeConfig voJudgeConfig = questionVO.getJudgeConfig();
         if (voJudgeConfig != null) {
             question.setJudgeConfig(JSONUtil.toJsonStr(voJudgeConfig));
@@ -128,6 +137,8 @@ public class QuestionVO implements Serializable {
         BeanUtils.copyProperties(question, questionVO);
         List<String> tagList = JSONUtil.toList(question.getTags(), String.class);
         questionVO.setTags(tagList);
+        List<JudgeCase> judgeCaseList = JSONUtil.toList(question.getJudgeCase(), JudgeCase.class);
+        questionVO.setJudgeCase(judgeCaseList);
         String judgeConfig = question.getJudgeConfig();
         questionVO.setJudgeConfig(JSONUtil.toBean(judgeConfig, JudgeConfig.class));
         return questionVO;
