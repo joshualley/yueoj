@@ -14,7 +14,7 @@ const getters = {};
 
 const mutations = {
   updateUser(state: UserState, payload: User) {
-    console.log("更新用户信息为：", payload);
+    // console.log("更新用户信息为：", payload);
     state.loginUser = payload;
   },
 };
@@ -23,6 +23,7 @@ const actions = {
     // 远程请求获取登录用户信息
     const resp = await UserControllerService.getLoginUserUsingGet();
     if (resp.code === 0) {
+      console.log(resp.data);
       context.commit("updateUser", resp.data);
     } else {
       context.commit("updateUser", {

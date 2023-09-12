@@ -25,35 +25,56 @@ const routes: Array<RouteRecordRaw> = [
   // 题目模块
   {
     path: "/",
-    name: "浏览题目",
-    component: () => import("../views/HomeView.vue"),
+    redirect: "/question/view",
+    meta: {
+      hide: true,
+    },
+  },
+  {
+    path: "/question",
+    redirect: "/question/view",
+    name: "题目",
+    // component: () => import("../views/HomeView.vue"),
     meta: {
       access: AccessEnum.NotLogin,
     },
-  },
-  {
-    path: "/add/question",
-    name: "创建题目",
-    component: () => import("../views/question/AddOrUpdateQuestionView.vue"),
-    meta: {
-      access: AccessEnum.Admin,
-    },
-  },
-  {
-    path: "/update/question",
-    name: "修改题目",
-    component: () => import("../views/question/AddOrUpdateQuestionView.vue"),
-    meta: {
-      access: AccessEnum.Admin,
-    },
-  },
-  {
-    path: "/manage/question",
-    name: "管理题目",
-    component: () => import("../views/question/ManageQuestionView.vue"),
-    meta: {
-      access: AccessEnum.Admin,
-    },
+    children: [
+      {
+        path: "/question/view",
+        name: "浏览题目",
+        component: () => import("../views/HomeView.vue"),
+        meta: {
+          access: AccessEnum.NotLogin,
+        },
+      },
+      {
+        path: "/question/manage",
+        name: "管理题目",
+        component: () => import("../views/question/ManageQuestionView.vue"),
+        meta: {
+          access: AccessEnum.Admin,
+        },
+      },
+      {
+        path: "/question/add",
+        name: "创建题目",
+        component: () =>
+          import("../views/question/AddOrUpdateQuestionView.vue"),
+        meta: {
+          access: AccessEnum.Admin,
+        },
+      },
+      {
+        path: "/question/update",
+        name: "修改题目",
+        component: () =>
+          import("../views/question/AddOrUpdateQuestionView.vue"),
+        meta: {
+          access: AccessEnum.Admin,
+          hide: true,
+        },
+      },
+    ],
   },
 
   {

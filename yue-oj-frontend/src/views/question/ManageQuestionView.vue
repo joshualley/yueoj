@@ -97,7 +97,7 @@ const onDeleteRow = async (question: Question) => {
 const onUpdateRow = (question: Question) => {
   console.log(question);
   router.push({
-    path: "/update/question",
+    path: "/question/update",
     query: {
       id: question.id,
     },
