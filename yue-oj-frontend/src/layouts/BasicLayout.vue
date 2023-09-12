@@ -30,7 +30,7 @@ import GlobalHeader from "@/components/GlobalHeader.vue";
   z-index: 99;
 }
 .content {
-  background: whitesmoke;
+  height: 100vh;
   margin: 8px;
 }
 .footer {

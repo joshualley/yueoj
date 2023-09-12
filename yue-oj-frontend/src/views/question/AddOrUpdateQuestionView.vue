@@ -17,25 +17,25 @@
       <a-form-item label="判题配置" :content-flex="false" :merge-props="false">
         <a-space direction="horizontal" fill>
           <a-card style="min-width: 480px">
-            <a-form-item field="title" label="内存限制(KB)">
+            <a-form-item field="judgeConfig.memoryLimit" label="内存限制(KB)">
               <a-input-number
-                v-model="form.judgeConfig.memoryLimit"
+                v-model="form.judgeConfig!.memoryLimit"
                 placeholder="请输入内存限制"
                 mode="button"
                 :min="0"
               />
             </a-form-item>
-            <a-form-item field="title" label="时间限制(ms)">
+            <a-form-item field="judgeConfig.timeLimit" label="时间限制(ms)">
               <a-input-number
-                v-model="form.judgeConfig.timeLimit"
+                v-model="form.judgeConfig!.timeLimit"
                 placeholder="请输入时间限制"
                 mode="button"
                 :min="0"
               />
             </a-form-item>
-            <a-form-item field="title" label="堆栈限制(KB)">
+            <a-form-item field="judgeConfig.stackLimit" label="堆栈限制(KB)">
               <a-input-number
-                v-model="form.judgeConfig.stackLimit"
+                v-model="form.judgeConfig!.stackLimit"
                 placeholder="请输入堆栈限制"
                 mode="button"
                 :min="0"
@@ -64,16 +64,10 @@
                 </template>
               </a-button>
             </template>
-            <a-form-item
-              field="`form.judgeCase[${index}].input`"
-              label="输入用例"
-            >
+            <a-form-item field="`judgeCase[${index}].input`" label="输入用例">
               <a-input v-model="item.input" placeholder="请输入输入用例" />
             </a-form-item>
-            <a-form-item
-              field="`form.judgeCase[${index}].output`"
-              label="输出用例"
-            >
+            <a-form-item field="`judgeCase[${index}].output`" label="输出用例">
               <a-input v-model="item.output" placeholder="请输入输出用例" />
             </a-form-item>
             <a-button
@@ -111,7 +105,7 @@ const route = useRoute();
 // 页面是否为修改页面
 const isUpdate = route.path.includes("update");
 
-const form = ref({
+const form = ref<QuestionVO>({
   title: "",
   content: "",
   tags: [],
@@ -141,11 +135,11 @@ onMounted(async () => {
     const resp = await QuestionControllerService.getQuestionVoByIdUsingGet(id);
     if (resp.code === 0) {
       // 将属性重新赋值给form
-      console.log(resp.data);
-      form.value = resp.data as any;
-      // form.value.tags = JSON.parse(resp.data?.tags ?? "[]");
-      // form.value.judgeCase = JSON.parse(resp.data?.judgeCase ?? "[]");
-      // form.value.judgeConfig = JSON.parse(resp.data?.judgeConfig ?? "{}");
+      console.log(resp.data?.judgeConfig);
+      form.value = resp.data ?? {};
+      form.value.judgeConfig = JSON.parse(
+        JSON.stringify(resp.data?.judgeConfig),
+      );
     } else {
       Message.error("未能加载出题目：" + resp.message);
     }
@@ -176,6 +170,12 @@ const onSubmit = async () => {
     );
     if (resp.code === 0) {
       Message.success("题目创建成功");
+      router.push({
+        path: "/question/update",
+        query: {
+          id: resp.data,
+        },
+      });
     } else {
       Message.error("题目创建失败：" + resp.message);
     }
@@ -194,17 +194,17 @@ const onAnswerChange = (v: string) => {
  * @param index
  */
 const onRemoveJudgeCase = (index: number) => {
-  if (form.value.judgeCase.length <= 1) {
+  if ((form.value.judgeCase?.length ?? 0) <= 1) {
     Message.warning("必须保留一个用例");
     return;
   }
-  form.value.judgeCase.splice(index, 1);
+  form.value.judgeCase?.splice(index, 1);
 };
 /**
  * 添加一行判题用例
  */
 const onAddJudgeCase = () => {
-  form.value.judgeCase.push({
+  form.value.judgeCase?.push({
     input: "",
     output: "",
   });

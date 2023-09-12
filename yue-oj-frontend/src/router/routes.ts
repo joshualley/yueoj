@@ -42,9 +42,18 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: "/question/view",
         name: "浏览题目",
-        component: () => import("../views/HomeView.vue"),
+        component: () => import("../views/question/QuestionsView.vue"),
         meta: {
           access: AccessEnum.NotLogin,
+        },
+      },
+      {
+        path: "/question/view/:id",
+        name: "做题",
+        component: () => import("../views/question/DoQuestionView.vue"),
+        meta: {
+          access: AccessEnum.User,
+          hide: true,
         },
       },
       {
@@ -52,7 +61,7 @@ const routes: Array<RouteRecordRaw> = [
         name: "管理题目",
         component: () => import("../views/question/ManageQuestionView.vue"),
         meta: {
-          access: AccessEnum.Admin,
+          access: AccessEnum.User,
         },
       },
       {
@@ -61,7 +70,7 @@ const routes: Array<RouteRecordRaw> = [
         component: () =>
           import("../views/question/AddOrUpdateQuestionView.vue"),
         meta: {
-          access: AccessEnum.Admin,
+          access: AccessEnum.User,
         },
       },
       {
@@ -70,7 +79,7 @@ const routes: Array<RouteRecordRaw> = [
         component: () =>
           import("../views/question/AddOrUpdateQuestionView.vue"),
         meta: {
-          access: AccessEnum.Admin,
+          access: AccessEnum.User,
           hide: true,
         },
       },

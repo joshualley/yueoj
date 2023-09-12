@@ -32,12 +32,20 @@
         </a-menu>
       </a-col>
       <a-col flex="100px">
-        <div v-if="loginUser?.userRole !== AccessEnum.NotLogin">
-          {{ loginUser?.userName }}
-        </div>
-        <div v-else>
+        <template v-if="loginUser?.userRole !== AccessEnum.NotLogin">
+          <a-dropdown @select="onUsernameClick">
+            <div class="username-p">
+              <div>{{ loginUser?.userName }}</div>
+            </div>
+            <template #content>
+              <a-doption value="/user/info">个人信息</a-doption>
+              <a-doption value="/user">登出</a-doption>
+            </template>
+          </a-dropdown>
+        </template>
+        <template v-else>
           <a href="/user/login">未登录</a>
-        </div>
+        </template>
       </a-col>
     </a-row>
   </div>
@@ -68,6 +76,12 @@ const onMenuClick = (path: string) => {
   router.push({
     path: path,
   });
+};
+
+const onUsernameClick = (
+  v: string | number | Record<string, any> | undefined,
+) => {
+  console.log(v);
 };
 
 /**
@@ -111,5 +125,16 @@ router.afterEach((to) => {
 .title {
   color: black;
   margin: 0 10px;
+}
+.username-p {
+  background: skyblue;
+  text-align: center;
+  color: white;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 25px;
 }
 </style>

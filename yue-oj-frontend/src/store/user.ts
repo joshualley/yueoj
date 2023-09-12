@@ -23,7 +23,7 @@ const actions = {
     // 远程请求获取登录用户信息
     const resp = await UserControllerService.getLoginUserUsingGet();
     if (resp.code === 0) {
-      console.log(resp.data);
+      // console.log(resp.data);
       context.commit("updateUser", resp.data);
     } else {
       context.commit("updateUser", {

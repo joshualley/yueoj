@@ -2,7 +2,6 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
-import "bytemd/dist/index.css";
 
 import ArcoVue from "@arco-design/web-vue";
 // 额外引入图标库

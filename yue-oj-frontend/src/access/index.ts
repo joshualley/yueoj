@@ -8,14 +8,11 @@ router.beforeEach(async (to, from, next) => {
   let loginUser = store.state.user.loginUser;
   if (!loginUser || loginUser.userRole === AccessEnum.NotLogin) {
     await store.dispatch("getLoginUser");
+    loginUser = store.state.user.loginUser;
   }
-  loginUser = store.state.user.loginUser;
   // 判断权限
   const needAccess = (to.meta?.access ?? AccessEnum.NotLogin) as AccessEnum;
-  if (needAccess === AccessEnum.NotLogin) {
-    next();
-    return;
-  } else {
+  if (needAccess !== AccessEnum.NotLogin) {
     if (!loginUser || loginUser.userRole == AccessEnum.NotLogin) {
       next(`/user/login?redirect=${to.fullPath}`);
       return;
@@ -25,6 +22,5 @@ router.beforeEach(async (to, from, next) => {
       return;
     }
   }
-
   next();
 });
