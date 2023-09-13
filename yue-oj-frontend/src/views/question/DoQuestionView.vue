@@ -153,6 +153,7 @@ const onSubmit = async () => {
     Message.success("题目提交成功，请等待判题结果。");
   } else {
     Message.error("题目提交失败：" + resp.message);
+    console.log(resp);
   }
 };
 </script>

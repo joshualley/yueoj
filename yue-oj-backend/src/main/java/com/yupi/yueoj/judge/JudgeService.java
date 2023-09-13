@@ -1,6 +1,7 @@
 package com.yupi.yueoj.judge;
 
 import com.yupi.yueoj.model.entity.QuestionSubmit;
+import org.springframework.stereotype.Service;
 
 /**
  * 判题服务

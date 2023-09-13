@@ -27,9 +27,6 @@ const eidtorInit = () => {
   if (!codeEditorRef.value) {
     return;
   }
-  if (editor) {
-    editor?.dispose();
-  }
   editor = monaco.editor.create(codeEditorRef.value, {
     value: props.code,
     language: props.language,
@@ -58,8 +55,10 @@ const eidtorInit = () => {
 watch(
   () => props.language,
   () => {
-    // console.log(props.language);
-    eidtorInit();
+    const model = editor?.getModel();
+    if (editor && model) {
+      monaco.editor.setModelLanguage(model, props.language);
+    }
   },
 );
 

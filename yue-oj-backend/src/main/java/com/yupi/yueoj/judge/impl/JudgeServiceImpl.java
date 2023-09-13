@@ -20,6 +20,7 @@ import com.yupi.yueoj.model.enums.QuestionSubmitStatusEnum;
 import com.yupi.yueoj.service.QuestionService;
 import com.yupi.yueoj.service.QuestionSubmitService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 /**
  * 判题服务实现
  */
+@Service
 public class JudgeServiceImpl implements JudgeService {
 
     @Resource
@@ -49,7 +51,7 @@ public class JudgeServiceImpl implements JudgeService {
 
         // 先判断题目的提交状态，避免重复执行
         Integer status = questionSubmit.getStatus();
-        if (status.equals(QuestionSubmitStatusEnum.WAITING.getValue())) {
+        if (status.equals(QuestionSubmitStatusEnum.RUNNING.getValue())) {
             throw new BusinessException(ErrorCode.OPERATION_ERROR, "正在判题中");
         }
 
@@ -102,6 +104,7 @@ public class JudgeServiceImpl implements JudgeService {
                 .judgeCases(judgeCaseList)
                 .judgeConfig(judgeConfig)
                 .outputs(response.getOutputs())
+                .language(language)
                 .inputs(inputs)
                 .build();
         JudgeManager manager = new JudgeManager();
@@ -112,13 +115,14 @@ public class JudgeServiceImpl implements JudgeService {
         questionSubmitSuccessUpdate.setId(questionSubmitId);
         questionSubmitSuccessUpdate.setStatus(QuestionSubmitStatusEnum.SUCCEED.getValue());
         questionSubmitSuccessUpdate.setJudgeInfo(JSONUtil.toJsonStr(judgeInfo));
-        isUpdateSuccess = questionSubmitService.updateById(questionSubmitUpdate);
+        isUpdateSuccess = questionSubmitService.updateById(questionSubmitSuccessUpdate);
         if (!isUpdateSuccess) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "题目判题状态更新失败");
         }
         // 更新题目的通过数
         Integer acceptedNum = question.getAcceptedNum();
         Question q = new Question();
+        q.setId(questionId);
         q.setAcceptedNum(acceptedNum+1);
         isUpdateSuccess = questionService.updateById(q);
         if (!isUpdateSuccess) {

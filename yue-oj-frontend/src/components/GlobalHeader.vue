@@ -39,7 +39,7 @@
             </div>
             <template #content>
               <a-doption value="/user/info">个人信息</a-doption>
-              <a-doption value="/user">登出</a-doption>
+              <a-doption value="/user" @click="onLogoutClick">登出</a-doption>
             </template>
           </a-dropdown>
         </template>
@@ -54,11 +54,12 @@
 <script setup lang="ts">
 import routes from "../router/routes";
 import { RouteRecordRaw, useRouter } from "vue-router";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useStore } from "vuex";
 import { State } from "@/store/type";
 import checkAccess from "@/access/CheckAccess";
 import AccessEnum from "@/access/AccessEnum";
+import { UserControllerService } from "@/api";
 
 const router = useRouter();
 const store = useStore<State>();
@@ -67,6 +68,34 @@ const loginUser = ref(store.state.user?.loginUser);
 
 // 过滤隐藏的菜单项
 const menus = ref<RouteRecordRaw[]>([]);
+
+/**
+ * 加载菜单
+ */
+const loadMenus = () => {
+  // 请求后获取用户及有权限的菜单
+  loginUser.value = store.state.user?.loginUser;
+  console.log(loginUser.value);
+  let fliterMenus = routes.filter(filterMenu);
+  // 检查2级菜单的权限
+  for (let i = 0; i < fliterMenus.length; i++) {
+    if (fliterMenus[i].children) {
+      fliterMenus[i].children = fliterMenus[i].children?.filter(filterMenu);
+    }
+  }
+  menus.value = fliterMenus;
+};
+
+/**
+ * 用户登出
+ */
+const onLogoutClick = async () => {
+  await UserControllerService.userLogoutUsingPost();
+  router.push({
+    path: "/user/login",
+    replace: true,
+  });
+};
 
 /**
  * 菜单点击事件
@@ -102,15 +131,7 @@ const filterMenu = (item: RouteRecordRaw): boolean => {
 
 router.afterEach((to) => {
   selectedKeys.value = [to.path];
-  // 请求后获取用户及有权限的菜单
-  loginUser.value = store.state.user?.loginUser;
-  menus.value = routes.filter(filterMenu);
-  // 检查2级菜单的权限
-  menus.value.forEach((submenu) => {
-    if (submenu.children) {
-      submenu.children = submenu.children.filter(filterMenu);
-    }
-  });
+  loadMenus();
 });
 </script>
 

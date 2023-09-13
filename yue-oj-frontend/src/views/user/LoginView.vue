@@ -16,9 +16,9 @@
         />
       </a-form-item>
       <a-form-item>
-        <a-button style="width: 100px" type="primary" html-type="submit"
-          >登录</a-button
-        >
+        <a-button style="width: 100px" type="primary" html-type="submit">
+          登录
+        </a-button>
       </a-form-item>
     </a-form>
   </div>
@@ -28,10 +28,11 @@
 import { UserControllerService } from "@/api";
 import { Message } from "@arco-design/web-vue";
 import { reactive } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 
 const router = useRouter();
+const route = useRoute();
 const store = useStore();
 
 const form = reactive({
@@ -45,9 +46,10 @@ const onLogin = async () => {
     // 登录并调整到主页
     await store.dispatch("getLoginUser");
     Message.success("登录成功");
-    console.log("登录成功", resp);
+    const path = route.redirectedFrom?.fullPath ?? "/";
+    // console.log(route.redirectedFrom);
     router.push({
-      path: "/",
+      path: path,
       replace: true,
     });
   } else {

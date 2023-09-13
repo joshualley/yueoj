@@ -2,6 +2,7 @@ import router from "@/router";
 import store from "@/store";
 import AccessEnum from "./AccessEnum";
 import checkAccess from "./CheckAccess";
+import { Message } from "@arco-design/web-vue";
 
 router.beforeEach(async (to, from, next) => {
   // 自动登录
@@ -14,6 +15,7 @@ router.beforeEach(async (to, from, next) => {
   const needAccess = (to.meta?.access ?? AccessEnum.NotLogin) as AccessEnum;
   if (needAccess !== AccessEnum.NotLogin) {
     if (!loginUser || loginUser.userRole == AccessEnum.NotLogin) {
+      Message.warning("您执行的操作需要登录");
       next(`/user/login?redirect=${to.fullPath}`);
       return;
     }
