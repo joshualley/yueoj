@@ -13,7 +13,7 @@ import com.yupi.yueoj.judge.strategy.JudgeManager;
 import com.yupi.yueoj.judge.strategy.JudgeContext;
 import com.yupi.yueoj.model.dto.question.JudgeCase;
 import com.yupi.yueoj.model.dto.question.JudgeConfig;
-import com.yupi.yueoj.model.dto.questionsubmit.JudgeInfo;
+import com.yupi.yueoj.judge.codesandbox.model.JudgeInfo;
 import com.yupi.yueoj.model.entity.Question;
 import com.yupi.yueoj.model.entity.QuestionSubmit;
 import com.yupi.yueoj.model.enums.QuestionSubmitStatusEnum;

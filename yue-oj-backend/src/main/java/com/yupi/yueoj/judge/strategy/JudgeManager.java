@@ -4,10 +4,8 @@ import com.yupi.yueoj.common.ErrorCode;
 import com.yupi.yueoj.exception.BusinessException;
 import com.yupi.yueoj.judge.strategy.impl.DefaultJudgeStrategy;
 import com.yupi.yueoj.judge.strategy.impl.JavaJudgeStrategy;
-import com.yupi.yueoj.model.dto.questionsubmit.JudgeInfo;
+import com.yupi.yueoj.judge.codesandbox.model.JudgeInfo;
 import com.yupi.yueoj.model.enums.QuestionSubmitLanguageEnum;
-
-import java.util.Objects;
 
 /**
  * 简化调用

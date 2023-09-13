@@ -4,7 +4,7 @@ import com.yupi.yueoj.judge.strategy.JudgeContext;
 import com.yupi.yueoj.judge.strategy.JudgeStrategy;
 import com.yupi.yueoj.model.dto.question.JudgeCase;
 import com.yupi.yueoj.model.dto.question.JudgeConfig;
-import com.yupi.yueoj.model.dto.questionsubmit.JudgeInfo;
+import com.yupi.yueoj.judge.codesandbox.model.JudgeInfo;
 import com.yupi.yueoj.model.enums.JudgeInfoMessageEnum;
 
 import java.util.List;

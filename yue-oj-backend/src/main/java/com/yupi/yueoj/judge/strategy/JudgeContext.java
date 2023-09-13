@@ -2,7 +2,7 @@ package com.yupi.yueoj.judge.strategy;
 
 import com.yupi.yueoj.model.dto.question.JudgeCase;
 import com.yupi.yueoj.model.dto.question.JudgeConfig;
-import com.yupi.yueoj.model.dto.questionsubmit.JudgeInfo;
+import com.yupi.yueoj.judge.codesandbox.model.JudgeInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
