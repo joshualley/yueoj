@@ -2,15 +2,16 @@ package com.valley.yueojcodesandbox.sevice.impl;
 
 import cn.hutool.core.io.FileUtil;
 import com.valley.yueojcodesandbox.model.ExecuteCodeRequest;
+import com.valley.yueojcodesandbox.model.ExecuteMessage;
 import com.valley.yueojcodesandbox.model.ExecuteResponse;
+import com.valley.yueojcodesandbox.model.JudgeInfo;
 import com.valley.yueojcodesandbox.sevice.CodeSandbox;
+import com.valley.yueojcodesandbox.utils.ProcessUtil;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,7 +28,7 @@ public class JavaNativeCodeSandbox implements CodeSandbox {
     /**
      * java代码的默认类名
      */
-    final private String FILE_NAME = "Main";
+    final private String CLASS_NAME = "Main";
     final private String FILE_SUFFIX = ".java";
 
     @Override
@@ -45,41 +46,48 @@ public class JavaNativeCodeSandbox implements CodeSandbox {
             FileUtil.mkdir(codeDir);
         }
         String userCodeParentPath = codeDir + File.separator + UUID.randomUUID();
-        String userCodePath = userCodeParentPath + File.separator + FILE_NAME + FILE_SUFFIX;
+        String userCodePath = userCodeParentPath + File.separator + CLASS_NAME + FILE_SUFFIX;
         File userCodeFile = FileUtil.writeString(code, userCodePath, StandardCharsets.UTF_8);
         // 2. 编译代码，得到class文件
-        String cmd = String.format("javac -encoding utf-8 %s", userCodeFile.getAbsolutePath());
-        Process process = null;
-        int exitCode = -1;
-        try {
-            process = Runtime.getRuntime().exec(cmd);
-            exitCode = process.waitFor();
-        } catch (IOException | InterruptedException ignored) {}
-        if (process == null) {
-            return null;
+        String compileCmd = String.format("javac -encoding utf-8 %s", userCodeFile.getAbsolutePath());
+        ExecuteMessage compileOutput = ProcessUtil.runCmd(compileCmd);
+        if (compileOutput.getExitValue() != 0) {
+            ExecuteResponse response = new ExecuteResponse();
+            response.setMessage("编译失败：\n" + compileOutput.getError());
+            response.setStatus(0);
+            return response;
         }
-        // 收集编译信息
-        BufferedReader reader;
-        if (exitCode == 0) {
-            System.out.println("编译成功");
-            reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        } else {
-            System.out.println("编译失败:" + exitCode);
-            reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-        }
-        StringBuilder compileOutput = new StringBuilder();
-        String outputLine = "";
-        try {
-            while ((outputLine = reader.readLine()) != null) {
-                compileOutput.append(outputLine);
-            }
-        } catch (IOException ignored) {}
-        System.out.println(compileOutput);
         // 3. 编译成功后，执行代码，得到输出结果
-        // 4. 收集输出结果
-        // 5. 文件清理
-        // 6. 错误处理，提升程序健壮性
+        List<String> outputs = new ArrayList<>();
+        boolean existsError = false;
+        for (String input : inputs) {
+            String runCmd = String.format("java -Dfile.encoding=UTF-8 -cp %s %s %s",
+                    userCodeParentPath, CLASS_NAME, input);
+            // System.out.println(runCmd);
+            ExecuteMessage runOutput = ProcessUtil.runCmd(runCmd);
+            // System.out.println("RUN:" + runOutput);
+            if (runOutput.getExitValue() == 0) {
+                outputs.add(runOutput.getOutput());
+            } else {
+                outputs.add(runOutput.getError());
+                existsError = true;
+            }
+        }
+        // 4. 文件清理
+        FileUtil.del(userCodeParentPath);
+        // 5. 错误处理，提升程序健壮性
+        ExecuteResponse response = new ExecuteResponse();
+        response.setOutputs(outputs);
+        if (existsError) {
+            response.setMessage("存在错误");
+        } else  {
+            response.setMessage("执行成功");
+        }
+        response.setStatus(0);
+        JudgeInfo judgeInfo = new JudgeInfo();
+        response.setJudgeInfo(judgeInfo);
+        
 
-        return null;
+        return response;
     }
 }
