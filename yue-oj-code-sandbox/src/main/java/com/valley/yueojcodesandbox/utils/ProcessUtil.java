@@ -1,6 +1,9 @@
 package com.valley.yueojcodesandbox.utils;
 
+import cn.hutool.core.date.StopWatch;
 import com.valley.yueojcodesandbox.model.ExecuteMessage;
+import com.valley.yueojcodesandbox.security.DefaultSecurityManager;
+import com.valley.yueojcodesandbox.security.MySecurityManager;
 
 import java.io.*;
 
@@ -20,44 +23,63 @@ public class ProcessUtil {
         String line = "";
         try {
             while ((line = reader.readLine()) != null) {
-                output.append(line);
+                output.append(line).append("\n");
             }
             reader.close();
         } catch (IOException ignored) {}
-        return String.join("\n", output);
+        return output.toString().trim();
     }
 
     /**
      * 执行命令
      * @param cmd
+     * @param timeout
      * @return
      */
-    public static ExecuteMessage runCmd(String cmd) {
-        Process process = null;
-        int exitCode = -1;
+    public static ExecuteMessage runCmd(String cmd, long timeout) {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
         try {
-            process = Runtime.getRuntime().exec(cmd);
-            exitCode = process.waitFor();
-        } catch (IOException | InterruptedException e) {
+            Process process = Runtime.getRuntime().exec(cmd);
+            // 判断程序是否超时
+            if (timeout > 0) {
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(timeout);
+                        if (process.isAlive()) {
+                            process.destroy();
+                        }
+                    } catch (InterruptedException ignored) {}
+                }).start();
+            }
+            int exitCode = process.waitFor();
+            stopWatch.stop();
+            // 收集输出信息
+            String output = "";
+            String error = "";
+            if (exitCode == 0) {
+                output = readInputStream(process.getInputStream());
+            } else {
+                error = readInputStream(process.getErrorStream());
+            }
+            process.destroy();
             return ExecuteMessage.builder()
                     .exitValue(exitCode)
+                    .output(output)
+                    .error(error)
+                    .time(stopWatch.getTotalTimeMillis())
+                    .memory(0L)
+                    .build();
+        } catch (Exception e) {
+            if (stopWatch.isRunning()) {
+                stopWatch.stop();
+            }
+            return ExecuteMessage.builder()
+                    .exitValue(-1)
                     .error(e.getMessage())
+                    .time(stopWatch.getTotalTimeMillis())
                     .build();
         }
-        // 收集输出信息
-        String output = "";
-        String error = "";
-        if (exitCode == 0) {
-            output = readInputStream(process.getInputStream());
-        } else {
-            error = readInputStream(process.getErrorStream());
-        }
-        process.destroy();
-        return ExecuteMessage.builder()
-                .exitValue(exitCode)
-                .output(output)
-                .error(error)
-                .build();
     }
 
     /**

@@ -1,6 +1,8 @@
 package com.valley.yueojcodesandbox.sevice.impl;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.dfa.FoundWord;
+import cn.hutool.dfa.WordTree;
 import com.valley.yueojcodesandbox.model.ExecuteCodeRequest;
 import com.valley.yueojcodesandbox.model.ExecuteMessage;
 import com.valley.yueojcodesandbox.model.ExecuteResponse;
@@ -12,13 +14,14 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 /**
  * Java原生实现的java代码沙箱
  */
-@Service
+@Service("native")
 public class JavaNativeCodeSandbox implements CodeSandbox {
 
     /**
@@ -30,14 +33,46 @@ public class JavaNativeCodeSandbox implements CodeSandbox {
      */
     final private String CLASS_NAME = "Main";
     final private String FILE_SUFFIX = ".java";
+    /**
+     * 自定义的安全管理器的相对路径
+     */
+    final private String SECURITY_MANAGER_CLASS_PATH =
+            "src" + File.separator
+            + "main" + File.separator
+            + "resources" + File.separator
+            + "security";
+
+    /**
+     * 程序执行超时时间
+     */
+    final private long TIMEOUT = 5000L;
+
+    final private static WordTree mWordTree = new WordTree();
+
+    static {
+        // 添加程序执行时，禁用的操作
+        mWordTree.addWords(Arrays.asList(
+                "Files",
+                "RunTime",
+                "exec"
+        ));
+    }
 
     @Override
     public ExecuteResponse executeCode(ExecuteCodeRequest request) {
-
         List<String> inputs = request.getInputs();
         String code = request.getCode();
         String language = request.getLanguage();
 
+        // 校验代码的安全性
+        FoundWord foundWord = mWordTree.matchWord(code);
+        if (foundWord != null) {
+            ExecuteResponse response = new ExecuteResponse();
+            response.setMessage("代码中存在非法操作：\n" + foundWord.getFoundWord());
+            // 返回错误状态
+            response.setStatus(2);
+            return response;
+        }
         // 1. 将用户代码保存到文件中
         String userDir = System.getProperty("user.dir");
         String codeDir = userDir + File.separator + CODE_PATH_NAME;
@@ -50,43 +85,60 @@ public class JavaNativeCodeSandbox implements CodeSandbox {
         File userCodeFile = FileUtil.writeString(code, userCodePath, StandardCharsets.UTF_8);
         // 2. 编译代码，得到class文件
         String compileCmd = String.format("javac -encoding utf-8 %s", userCodeFile.getAbsolutePath());
-        ExecuteMessage compileOutput = ProcessUtil.runCmd(compileCmd);
+        ExecuteMessage compileOutput = ProcessUtil.runCmd(compileCmd, 0);
         if (compileOutput.getExitValue() != 0) {
             ExecuteResponse response = new ExecuteResponse();
             response.setMessage("编译失败：\n" + compileOutput.getError());
-            response.setStatus(0);
+            // 返回错误状态
+            response.setStatus(2);
             return response;
         }
         // 3. 编译成功后，执行代码，得到输出结果
         List<String> outputs = new ArrayList<>();
         boolean existsError = false;
+        // 程序最大运行时间
+        Long maxTime = 0L;
+        String securityManagerClassPath = userDir + File.separator + SECURITY_MANAGER_CLASS_PATH;
         for (String input : inputs) {
-            String runCmd = String.format("java -Dfile.encoding=UTF-8 -cp %s %s %s",
-                    userCodeParentPath, CLASS_NAME, input);
-            // System.out.println(runCmd);
-            ExecuteMessage runOutput = ProcessUtil.runCmd(runCmd);
-            // System.out.println("RUN:" + runOutput);
+            // -Dfile.encoding=UTF-8: 指定运行的程序编码格式
+            // -Xmx256m: 指定JVM运行程序的最大堆空间为 256M
+            // -Xms: 指定JVM运行程序的初始堆空间
+            // -Djava.security.manager=MySecurityManager: 切换为自定义的安全管理器
+            String runCmd = String.format(
+                    "java -Xmx256m -Dfile.encoding=UTF-8 -cp %s;%s -Djava.security.manager=MySecurityManager %s %s",
+                    userCodeParentPath, securityManagerClassPath, CLASS_NAME, input);
+            ExecuteMessage runOutput = ProcessUtil.runCmd(runCmd, TIMEOUT);
             if (runOutput.getExitValue() == 0) {
                 outputs.add(runOutput.getOutput());
             } else {
                 outputs.add(runOutput.getError());
                 existsError = true;
             }
+            if (runOutput.getTime() > maxTime) {
+                maxTime = runOutput.getTime();
+            }
         }
         // 4. 文件清理
-        FileUtil.del(userCodeParentPath);
-        // 5. 错误处理，提升程序健壮性
+        if (userCodeFile.getParentFile() != null) {
+            FileUtil.del(userCodeParentPath);
+        }
+        // 5. 返回结果
         ExecuteResponse response = new ExecuteResponse();
         response.setOutputs(outputs);
         if (existsError) {
+            // 返回失败状态
+            response.setStatus(3);
             response.setMessage("存在错误");
         } else  {
+            // 返回成功状态
+            response.setStatus(1);
             response.setMessage("执行成功");
         }
-        response.setStatus(0);
+
         JudgeInfo judgeInfo = new JudgeInfo();
+        judgeInfo.setTime(maxTime);
+        judgeInfo.setMemory(0);
         response.setJudgeInfo(judgeInfo);
-        
 
         return response;
     }
