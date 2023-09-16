@@ -17,21 +17,28 @@ import java.util.List;
 class CodeSandboxTest {
 
     // 读取配置文件
-    @Value("${codesandbox.value:example}")
+    @Value("${codesandbox.type:example}")
     private String type;
 
     @Test
     void executeCode() {
         CodeSandbox codeSandbox = CodeSandboxFactory.newInstance(type);
-        String code = "int main() { return 0; }";
+        String code = "public class Main {\n" +
+                "    public static void main(String[] args) {\n" +
+                "        int a = Integer.parseInt(args[0]);\n" +
+                "        int b = Integer.parseInt(args[1]);\n" +
+                "        System.out.println(a + b);\n" +
+                "    }\n" +
+                "}";
         String language = QuestionSubmitLanguageEnum.JAVA.getValue();
-        List<String> inputs = Arrays.asList("1 2", "3");
+        List<String> inputs = Arrays.asList("1 2", "3 4");
         ExecuteCodeRequest request = ExecuteCodeRequest.builder()
                 .code(code)
                 .language(language)
                 .inputs(inputs)
                 .build();
         ExecuteResponse response = codeSandbox.executeCode(request);
+        System.out.println(response);
         Assertions.assertNotNull(response);
     }
 

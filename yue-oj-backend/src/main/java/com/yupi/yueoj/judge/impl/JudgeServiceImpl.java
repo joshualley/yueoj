@@ -38,7 +38,7 @@ public class JudgeServiceImpl implements JudgeService {
     private QuestionSubmitService questionSubmitService;
 
     // 读取配置文件
-    @Value("${codesandbox.value:example}")
+    @Value("${codesandbox.type:example}")
     private String codeSandboxType;
 
     @Override
