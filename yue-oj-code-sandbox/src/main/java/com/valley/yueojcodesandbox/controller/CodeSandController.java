@@ -16,6 +16,9 @@ public class CodeSandController {
 
     @PostMapping("/codesandbox")
     public ExecuteResponse execCode(@RequestBody ExecuteCodeRequest request) {
+        if (request == null) {
+            throw new RuntimeException("请求参数为空");
+        }
         return codeSandboxService.executeCode(request);
     }
 }
