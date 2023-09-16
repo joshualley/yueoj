@@ -14,10 +14,10 @@ import java.util.Arrays;
 import java.util.Collections;
 
 @SpringBootTest
-class CodeSandboxTest {
+class CodeSandboxServiceTest {
 
     @Resource(name = "docker")
-    CodeSandbox codeSandbox;
+    CodeSandboxService codeSandboxService;
 
     @Test
     public void TestExecuteCode() {
@@ -27,7 +27,7 @@ class CodeSandboxTest {
         request.setCode(code);
         request.setLanguage(LanguageEnum.JAVA.getValue());
 
-        ExecuteResponse response = codeSandbox.executeCode(request);
+        ExecuteResponse response = codeSandboxService.executeCode(request);
         System.out.println(response);
     }
 
@@ -42,7 +42,7 @@ class CodeSandboxTest {
         request.setCode(code);
         request.setLanguage(LanguageEnum.JAVA.getValue());
 
-        ExecuteResponse response = codeSandbox.executeCode(request);
+        ExecuteResponse response = codeSandboxService.executeCode(request);
         System.out.println(response);
     }
 
@@ -57,7 +57,7 @@ class CodeSandboxTest {
         request.setCode(code);
         request.setLanguage(LanguageEnum.JAVA.getValue());
 
-        ExecuteResponse response = codeSandbox.executeCode(request);
+        ExecuteResponse response = codeSandboxService.executeCode(request);
         System.out.println(response);
     }
 
@@ -72,7 +72,7 @@ class CodeSandboxTest {
         request.setCode(code);
         request.setLanguage(LanguageEnum.JAVA.getValue());
 
-        ExecuteResponse response = codeSandbox.executeCode(request);
+        ExecuteResponse response = codeSandboxService.executeCode(request);
         System.out.println(response);
     }
 
@@ -87,7 +87,7 @@ class CodeSandboxTest {
         request.setCode(code);
         request.setLanguage(LanguageEnum.JAVA.getValue());
 
-        ExecuteResponse response = codeSandbox.executeCode(request);
+        ExecuteResponse response = codeSandboxService.executeCode(request);
         System.out.println(response);
     }
 
@@ -102,7 +102,7 @@ class CodeSandboxTest {
         request.setCode(code);
         request.setLanguage(LanguageEnum.JAVA.getValue());
 
-        ExecuteResponse response = codeSandbox.executeCode(request);
+        ExecuteResponse response = codeSandboxService.executeCode(request);
         System.out.println(response);
     }
 }

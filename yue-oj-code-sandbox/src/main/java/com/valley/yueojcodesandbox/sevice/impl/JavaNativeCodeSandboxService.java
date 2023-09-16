@@ -7,7 +7,7 @@ import com.valley.yueojcodesandbox.model.ExecuteCodeRequest;
 import com.valley.yueojcodesandbox.model.ExecuteMessage;
 import com.valley.yueojcodesandbox.model.ExecuteResponse;
 import com.valley.yueojcodesandbox.model.JudgeInfo;
-import com.valley.yueojcodesandbox.sevice.CodeSandbox;
+import com.valley.yueojcodesandbox.sevice.CodeSandboxService;
 import com.valley.yueojcodesandbox.utils.ProcessUtil;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +22,7 @@ import java.util.UUID;
  * Java原生实现的java代码沙箱
  */
 @Service("native")
-public class JavaNativeCodeSandbox implements CodeSandbox {
+public class JavaNativeCodeSandboxService implements CodeSandboxService {
 
     /**
      * 保持存java代码文件的更目录

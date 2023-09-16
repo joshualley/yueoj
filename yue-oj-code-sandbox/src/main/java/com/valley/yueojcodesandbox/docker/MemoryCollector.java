@@ -2,12 +2,14 @@ package com.valley.yueojcodesandbox.docker;
 
 import com.github.dockerjava.api.async.ResultCallback;
 import com.github.dockerjava.api.model.Statistics;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.Closeable;
 
 /**
  * DOcker容器内存收集器
  */
+@Slf4j
 public class MemoryCollector implements ResultCallback<Statistics> {
     private Long initMemory = 0L;
     private Long maxMemory = 0L;
@@ -18,7 +20,7 @@ public class MemoryCollector implements ResultCallback<Statistics> {
      */
     public Long getMemoryUsage() {
         long usage = maxMemory - initMemory;
-        System.out.println(String.format("初始内存：%d, 最大内存：%d", initMemory, maxMemory));
+        log.info(String.format("初始内存：%d, 最大内存：%d", initMemory, maxMemory));
         return usage;
     }
 
