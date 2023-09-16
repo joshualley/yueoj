@@ -1,6 +1,5 @@
 package com.yupi.yueoj.judge.codesandbox;
 
-import com.yupi.yueoj.judge.codesandbox.impl.ExampleCodeSandbox;
 import com.yupi.yueoj.judge.codesandbox.model.ExecuteCodeRequest;
 import com.yupi.yueoj.judge.codesandbox.model.ExecuteResponse;
 import com.yupi.yueoj.model.enums.QuestionSubmitLanguageEnum;
@@ -9,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
