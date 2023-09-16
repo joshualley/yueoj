@@ -1,5 +1,7 @@
 package com.yupi.yueoj.judge.strategy.impl;
 
+import com.yupi.yueoj.judge.codesandbox.model.ExecuteResponse;
+import com.yupi.yueoj.judge.codesandbox.model.enums.ExecuteStatusEnum;
 import com.yupi.yueoj.judge.strategy.JudgeContext;
 import com.yupi.yueoj.judge.strategy.JudgeStrategy;
 import com.yupi.yueoj.model.dto.question.JudgeCase;
@@ -20,9 +22,14 @@ public class DefaultJudgeStrategy implements JudgeStrategy {
      */
     @Override
     public JudgeInfo doJudge(JudgeContext context) {
-
-        JudgeInfo judgeInfo = context.getJudgeInfo();
-        // String message = judgeInfo.getMessage();
+        ExecuteResponse sandCodeBoxResponse = context.getSandCodeBoxResponse();
+        JudgeInfo judgeInfo = sandCodeBoxResponse.getJudgeInfo();
+        if (judgeInfo == null) {
+            judgeInfo = new JudgeInfo();
+            judgeInfo.setMessage("");
+            judgeInfo.setTime(0L);
+            judgeInfo.setMemory(0L);
+        }
         long time = judgeInfo.getTime();
         long memory = judgeInfo.getMemory();
 
@@ -36,8 +43,20 @@ public class DefaultJudgeStrategy implements JudgeStrategy {
         judgeInfoResponse.setTime(time);
         judgeInfoResponse.setMemory(memory);
 
+        // 先根据返回状态判断
+        if (sandCodeBoxResponse.getStatus().equals(ExecuteStatusEnum.ILLEGAL_OPERATION.getValue())) {
+            judgeInfoResponse.setMessage(JudgeInfoMessageEnum.DANGEROUS_OPERATION.getValue());
+            return judgeInfoResponse;
+        } else if (sandCodeBoxResponse.getStatus().equals(ExecuteStatusEnum.COMPILE_ERROR.getValue())) {
+            judgeInfoResponse.setMessage(JudgeInfoMessageEnum.COMPILE_ERROR.getValue());
+            return judgeInfoResponse;
+        } else if (sandCodeBoxResponse.getStatus().equals(ExecuteStatusEnum.RUNNING_ERROR.getValue())) {
+            judgeInfoResponse.setMessage(JudgeInfoMessageEnum.RUNTIME_ERROR.getValue());
+            return judgeInfoResponse;
+        }
+
         List<String> inputs = context.getInputs();
-        List<String> outputs = context.getOutputs();
+        List<String> outputs = sandCodeBoxResponse.getOutputs();
         // a. 先判断输出数量和预期数量是否相同
         if (outputs.size() != inputs.size()) {
             judgeInfoResponse.setMessage(JudgeInfoMessageEnum.WRONG_ANSWER.getValue());

@@ -1,4 +1,4 @@
-package com.valley.yueojcodesandbox.model.enums;
+package com.yupi.yueoj.judge.codesandbox.model.enums;
 
 import java.util.Arrays;
 import java.util.List;

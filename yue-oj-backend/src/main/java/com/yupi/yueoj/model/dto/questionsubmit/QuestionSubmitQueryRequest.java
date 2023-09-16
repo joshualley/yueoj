@@ -15,7 +15,10 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class QuestionSubmitQueryRequest extends PageRequest implements Serializable {
-
+    /**
+     * 题目
+     */
+    private String title;
     /**
      * 编程语言
      */

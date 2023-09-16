@@ -10,11 +10,17 @@ import com.yupi.yueoj.common.ResultUtils;
 import com.yupi.yueoj.constant.UserConstant;
 import com.yupi.yueoj.exception.BusinessException;
 import com.yupi.yueoj.exception.ThrowUtils;
+import com.yupi.yueoj.judge.JudgeService;
 import com.yupi.yueoj.model.dto.question.*;
+import com.yupi.yueoj.model.dto.questionsubmit.QuestionSubmitAddRequest;
+import com.yupi.yueoj.model.dto.questionsubmit.QuestionSubmitQueryRequest;
 import com.yupi.yueoj.model.entity.Question;
+import com.yupi.yueoj.model.entity.QuestionSubmit;
 import com.yupi.yueoj.model.entity.User;
+import com.yupi.yueoj.model.vo.QuestionSubmitVO;
 import com.yupi.yueoj.model.vo.QuestionVO;
 import com.yupi.yueoj.service.QuestionService;
+import com.yupi.yueoj.service.QuestionSubmitService;
 import com.yupi.yueoj.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -23,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * 題目接口
@@ -39,7 +46,13 @@ public class QuestionController {
     private QuestionService questionService;
 
     @Resource
+    private QuestionSubmitService questionSubmitService;
+
+    @Resource
     private UserService userService;
+
+    @Resource
+    private JudgeService judgeService;
 
     private final static Gson GSON = new Gson();
 
@@ -274,5 +287,64 @@ public class QuestionController {
         }
         boolean result = questionService.updateById(question);
         return ResultUtils.success(result);
+    }
+
+    /**
+     * 问题提交
+     *
+     * @param questionSubmitAddRequest
+     * @param request
+     * @return resultNum
+     */
+    @PostMapping("/submit/do")
+    public BaseResponse<Long> doQuestionSubmit(@RequestBody QuestionSubmitAddRequest questionSubmitAddRequest,
+                                               HttpServletRequest request) {
+        if (questionSubmitAddRequest == null || questionSubmitAddRequest.getQuestionId() <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        // 登录才能提交题目
+        final User loginUser = userService.getLoginUser(request);
+        long questionSubmitId = questionSubmitService.doQuestionSubmit(questionSubmitAddRequest, loginUser);
+        return ResultUtils.success(questionSubmitId);
+    }
+
+    @GetMapping("/submit/get/vo")
+    public BaseResponse<QuestionSubmitVO> getQuestionSubmitVOById(long id, HttpServletRequest request) {
+        if (id <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        User loginUser = userService.getLoginUser(request);
+        QuestionSubmit questionSubmit = questionSubmitService.getById(id);
+        if (questionSubmit == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "题目提交记录不存在");
+        }
+        QuestionSubmitVO questionSubmitVO = questionSubmitService.getQuestionSubmitVO(questionSubmit, loginUser, request);
+        return ResultUtils.success(questionSubmitVO);
+    }
+
+    @PostMapping("/submit/list/page")
+    public BaseResponse<Page<QuestionSubmitVO>> listQuestionSubmitByPage(@RequestBody QuestionSubmitQueryRequest questionSubmitQueryRequest,
+                                                                         HttpServletRequest request) {
+        long current = questionSubmitQueryRequest.getCurrent();
+        long size = questionSubmitQueryRequest.getPageSize();
+        Page<QuestionSubmit> page = questionSubmitService.page(new Page<>(current, size),
+                questionSubmitService.getQueryWrapper(questionSubmitQueryRequest));
+        User loginUser = userService.getLoginUser(request);
+        return ResultUtils.success(questionSubmitService.getQuestionSubmitVOPage(page, loginUser, request));
+    }
+
+    /**
+     * 对已经提交的题目，进行重新判题
+     * @param id
+     * @param request
+     * @return
+     */
+    @PostMapping("/submit/do/judge")
+    public BaseResponse<QuestionSubmitVO> doJudge(long id, HttpServletRequest request) {
+        // 异步执行判题服务
+        CompletableFuture.runAsync(() -> {
+            judgeService.doJudge(id);
+        });
+        return getQuestionSubmitVOById(id, request);
     }
 }

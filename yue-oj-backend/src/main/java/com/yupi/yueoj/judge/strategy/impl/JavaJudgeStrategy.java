@@ -1,5 +1,6 @@
 package com.yupi.yueoj.judge.strategy.impl;
 
+import com.yupi.yueoj.judge.codesandbox.model.ExecuteResponse;
 import com.yupi.yueoj.judge.strategy.JudgeContext;
 import com.yupi.yueoj.judge.strategy.JudgeStrategy;
 import com.yupi.yueoj.model.dto.question.JudgeCase;
@@ -20,15 +21,20 @@ public class JavaJudgeStrategy implements JudgeStrategy {
      */
     @Override
     public JudgeInfo doJudge(JudgeContext context) {
-        JudgeInfo judgeInfo = context.getJudgeInfo();
-        // String message = judgeInfo.getMessage();
+        ExecuteResponse sandCodeBoxResponse = context.getSandCodeBoxResponse();
+        JudgeInfo judgeInfo = sandCodeBoxResponse.getJudgeInfo();
+        if (judgeInfo == null) {
+            judgeInfo = new JudgeInfo();
+            judgeInfo.setMessage("");
+            judgeInfo.setTime(0L);
+            judgeInfo.setMemory(0L);
+        }
         long time = judgeInfo.getTime();
         long memory = judgeInfo.getMemory();
 
         JudgeConfig judgeConfig = context.getJudgeConfig();
         Long timeLimit = judgeConfig.getTimeLimit();
         Long memoryLimit = judgeConfig.getMemoryLimit();
-        // Long stackLimit = judgeConfig.getStackLimit();
 
         // 创建判题信息对象
         JudgeInfo judgeInfoResponse = new JudgeInfo();
@@ -36,7 +42,7 @@ public class JavaJudgeStrategy implements JudgeStrategy {
         judgeInfoResponse.setMemory(memory);
 
         List<String> inputs = context.getInputs();
-        List<String> outputs = context.getOutputs();
+        List<String> outputs = sandCodeBoxResponse.getOutputs();
         // a. 先判断输出数量和预期数量是否相同
         if (outputs.size() != inputs.size()) {
             judgeInfoResponse.setMessage(JudgeInfoMessageEnum.WRONG_ANSWER.getValue());

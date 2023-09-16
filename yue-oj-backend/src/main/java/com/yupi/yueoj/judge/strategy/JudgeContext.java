@@ -1,5 +1,6 @@
 package com.yupi.yueoj.judge.strategy;
 
+import com.yupi.yueoj.judge.codesandbox.model.ExecuteResponse;
 import com.yupi.yueoj.model.dto.question.JudgeCase;
 import com.yupi.yueoj.model.dto.question.JudgeConfig;
 import com.yupi.yueoj.judge.codesandbox.model.JudgeInfo;
@@ -19,14 +20,9 @@ import java.util.List;
 @AllArgsConstructor
 public class JudgeContext {
     /**
-     * 代码沙箱返回的判题信息
+     * 沙箱返回的执行结果
      */
-    private JudgeInfo judgeInfo;
-
-    /**
-     * 代码沙箱返回的判题结果
-     */
-    private List<String> outputs;
+    private ExecuteResponse sandCodeBoxResponse;
     /**
      * 题目的判题输入用例
      */

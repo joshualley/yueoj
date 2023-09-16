@@ -12,7 +12,7 @@ import GlobalHeader from "@/components/GlobalHeader.vue";
         <router-view />
       </a-layout-content>
       <a-layout-footer class="footer">
-        <a href="http://yupi.icu">@c by Jose</a>
+        <div>Copyright©2023 Jose</div>
       </a-layout-footer>
     </a-layout>
   </div>
@@ -21,6 +21,7 @@ import GlobalHeader from "@/components/GlobalHeader.vue";
 <style scoped>
 .layout {
   min-height: 500px;
+  position: relative;
 }
 .header {
   margin: 0 10px;
@@ -30,11 +31,10 @@ import GlobalHeader from "@/components/GlobalHeader.vue";
   z-index: 99;
 }
 .content {
-  height: 100vh;
-  margin: 8px;
+  margin: 10px 10px 60px 10px;
 }
 .footer {
-  background: #efefef;
+  background: whitesmoke;
   padding: 16px;
   position: fixed;
   bottom: 0;

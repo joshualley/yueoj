@@ -57,6 +57,23 @@ const routes: Array<RouteRecordRaw> = [
         },
       },
       {
+        path: "/question/submit/view",
+        name: "题目提交记录",
+        component: () => import("../views/question/QuestionSubmitView.vue"),
+        meta: {
+          access: AccessEnum.User,
+        },
+      },
+      {
+        path: "/question/submit/view/:id",
+        name: "查看提交记录",
+        component: () => import("../views/question/ViewQuestionSubmitView.vue"),
+        meta: {
+          access: AccessEnum.User,
+          hide: true,
+        },
+      },
+      {
         path: "/question/manage",
         name: "管理题目",
         component: () => import("../views/question/ManageQuestionView.vue"),
@@ -85,7 +102,6 @@ const routes: Array<RouteRecordRaw> = [
       },
     ],
   },
-
   {
     path: "/noauth",
     name: "没权限",

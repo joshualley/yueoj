@@ -1,7 +1,14 @@
 <template>
-  <div class="about">关于页面</div>
+  <div class="about">Develop By Jose</div>
 </template>
 
 <script setup lang="ts"></script>
 
-<style scoped></style>
+<style scoped>
+.about {
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  justify-items: center;
+}
+</style>

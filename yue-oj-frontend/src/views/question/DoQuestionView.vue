@@ -84,7 +84,6 @@
 import {
   QuestionControllerService,
   QuestionSubmitAddRequest,
-  QuestionSubmitControllerService,
   QuestionVO,
 } from "@/api";
 import MdViewer from "@/components/MdViewer.vue";
@@ -92,6 +91,7 @@ import CodeEditor from "@/components/CodeEditor.vue";
 import { Message } from "@arco-design/web-vue";
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
+import router from "@/router";
 
 const route = useRoute();
 
@@ -146,11 +146,14 @@ const onCodeChange = (v: string) => {
  */
 const onSubmit = async () => {
   // 创建题目提交
-  const resp = await QuestionSubmitControllerService.doQuestionSubmitUsingPost(
+  const resp = await QuestionControllerService.doQuestionSubmitUsingPost(
     form.value,
   );
   if (resp.code === 0) {
     Message.success("题目提交成功，请等待判题结果。");
+    router.push({
+      path: `/question/submit/view/${resp.data}`,
+    });
   } else {
     Message.error("题目提交失败：" + resp.message);
     console.log(resp);

@@ -1,5 +1,5 @@
 <template>
-  <div class="questions-view">
+  <div class="question-submit-view">
     <a-input-search
       v-model="searchText"
       :style="{ minWidth: '320px', margin: '10px 0' }"
@@ -8,7 +8,7 @@
       @search="onSearch"
     />
     <a-table
-      :data="questions"
+      :data="questionSubmits"
       :pagination="{
         pageSize: searchParams.pageSize,
         current: searchParams.current,
@@ -23,12 +23,19 @@
             {{ moment(record.createTime).format("YYYY/MM/DD") }}
           </template>
         </a-table-column>
-        <a-table-column title="标题" data-index="title"></a-table-column>
+        <a-table-column
+          title="提交用户"
+          data-index="userVO.userName"
+        ></a-table-column>
+        <a-table-column
+          title="题目"
+          data-index="questionVO.title"
+        ></a-table-column>
         <a-table-column title="标签">
           <template #cell="{ record }">
             <a-space>
               <a-tag
-                v-for="(item, index) in record.tags"
+                v-for="(item, index) in record.questionVO.tags"
                 :key="index"
                 color="arcoblue"
                 size="small"
@@ -38,36 +45,27 @@
             </a-space>
           </template>
         </a-table-column>
-        <a-table-column title="通过率">
+        <a-table-column title="语言" data-index="language"></a-table-column>
+        <a-table-column title="状态" data-index="">
           <template #cell="{ record }">
-            <p>
-              {{
-                !record.submitNumb || record.submitNumb === 0
-                  ? 0
-                  : Math.round(
-                      (record.acceptedNum / record.submitNumb) * 10000,
-                    ) / 100
-              }}
-              % ({{ record.acceptedNum }} / {{ record.submitNumb }})
-            </p>
+            <div>{{ QustionSubmitStatusMap(record.status) }}</div>
           </template>
         </a-table-column>
-
-        <a-table-column title="判题配置">
+        <a-table-column title="资源耗用">
           <a-table-column
-            title="内存限制"
-            data-index="judgeConfig.memoryLimit"
+            title="内存消耗(kb)"
+            data-index="judgeInfo.memory"
           ></a-table-column>
           <a-table-column
-            title="时间限制"
-            data-index="judgeConfig.timeLimit"
+            title="时间消耗(ms)"
+            data-index="judgeInfo.time"
           ></a-table-column>
         </a-table-column>
         <a-table-column title="操作">
           <template #cell="{ record }">
             <a-space>
               <a-button type="outline" @click="doQuestion(record)">
-                做题
+                查看
               </a-button>
             </a-space>
           </template>
@@ -78,17 +76,18 @@
 </template>
 
 <script setup lang="ts">
-import { Question, QuestionControllerService } from "@/api";
+import { Question, QuestionControllerService, QuestionSubmitVO } from "@/api";
 import { Message } from "@arco-design/web-vue";
 import { watchEffect } from "vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import moment from "moment";
+import QustionSubmitStatusMap from "@/utils/QustionSubmitStatusMap";
 
 const router = useRouter();
 
 // 页面数据
-const questions = ref<Array<Question>>([]);
+const questionSubmits = ref<Array<QuestionSubmitVO>>([]);
 const total = ref(0);
 
 const searchText = ref("");
@@ -111,24 +110,25 @@ const onSearch = () => {
  * 加载数据
  */
 const loadTableData = async () => {
-  const resp = await QuestionControllerService.listQuestionVoByPageUsingPost(
-    searchParams.value,
-  );
+  const resp =
+    await QuestionControllerService.listQuestionSubmitByPageUsingPost(
+      searchParams.value,
+    );
   if (resp.code === 0) {
-    questions.value = resp.data.records;
+    questionSubmits.value = resp.data.records;
     total.value = Number(resp.data.total);
   } else {
-    Message.error("未能获取到题目数据：" + resp.message);
+    Message.error("未能获取到题目提交记录数据：" + resp.message);
   }
 };
 
 /**
- *
- * @param question 跳转到做题页面
+ * 跳转到做题页面
+ * @param question
  */
 const doQuestion = (question: Question) => {
   router.push({
-    path: `/question/view/${question.id}`,
+    path: `/question/submit/view/${question.id}`,
   });
 };
 
@@ -147,7 +147,7 @@ watchEffect(() => {
 </script>
 
 <style scoped>
-.questions-view {
+.question-submit-view {
   margin: 0 auto;
   max-width: 1280px;
 }

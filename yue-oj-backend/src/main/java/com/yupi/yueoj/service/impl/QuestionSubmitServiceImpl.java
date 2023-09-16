@@ -99,7 +99,6 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         CompletableFuture.runAsync(() -> {
            judgeService.doJudge(questionSubmitId);
         });
-//        judgeService.doJudge(questionSubmitId);
         return questionSubmitId;
     }
 
@@ -158,11 +157,15 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         Integer status = questionSubmitQueryRequest.getStatus();
         Long questionId = questionSubmitQueryRequest.getQuestionId();
         Long userId = questionSubmitQueryRequest.getUserId();
+        String title = questionSubmitQueryRequest.getTitle();
 
         String sortField = questionSubmitQueryRequest.getSortField();
         String sortOrder = questionSubmitQueryRequest.getSortOrder();
 
         // 拼接查询条件
+        queryWrapper.inSql(ObjectUtils.isNotEmpty(title),
+                "questionId", "select id from question where title like '%" + title + "%'");
+
         queryWrapper.eq(ObjectUtils.isNotEmpty(language), "language", language);
         queryWrapper.eq(ObjectUtils.isNotEmpty(userId), "userId", userId);
         queryWrapper.eq(QuestionSubmitStatusEnum.getEnumByValue(status) != null, "status", status);

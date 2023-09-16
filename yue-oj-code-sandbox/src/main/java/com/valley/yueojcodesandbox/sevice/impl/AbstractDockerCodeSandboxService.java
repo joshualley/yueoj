@@ -9,6 +9,7 @@ import com.valley.yueojcodesandbox.docker.MemoryCollector;
 import com.valley.yueojcodesandbox.model.ExecuteCodeRequest;
 import com.valley.yueojcodesandbox.model.ExecuteMessage;
 import com.valley.yueojcodesandbox.model.ExecuteResponse;
+import com.valley.yueojcodesandbox.model.JudgeInfo;
 import com.valley.yueojcodesandbox.model.enums.ExecuteStatusEnum;
 import com.valley.yueojcodesandbox.sevice.CodeSandboxService;
 
@@ -60,9 +61,15 @@ public abstract class AbstractDockerCodeSandboxService implements CodeSandboxSer
     public ExecuteResponse executeCode(ExecuteCodeRequest request) {
         List<String> inputs = request.getInputs();
         String code = request.getCode();
+
+        ExecuteResponse response = new ExecuteResponse();
+        JudgeInfo judgeInfo = new JudgeInfo();
+        judgeInfo.setMessage("");
+        judgeInfo.setTime(0L);
+        judgeInfo.setMemory(0L);
+        response.setJudgeInfo(judgeInfo);
         // 1. 检查代码合法性
         if (!checkCodeLegality(code)) {
-            ExecuteResponse response = new ExecuteResponse();
             response.setMessage(ExecuteStatusEnum.ILLEGAL_OPERATION.getText());
             response.setStatus(ExecuteStatusEnum.ILLEGAL_OPERATION.getValue());
             return response;
@@ -81,14 +88,13 @@ public abstract class AbstractDockerCodeSandboxService implements CodeSandboxSer
         File codeFile = saveCodeToFile(code, userCodeParentDirName);
         ExecuteMessage compileOutput = compile(userCodeParentDirName);
         if (compileOutput.getExitValue() != 0) {
-            ExecuteResponse response = new ExecuteResponse();
             response.setMessage(compileOutput.getError());
             // 返回错误状态
             response.setStatus(ExecuteStatusEnum.COMPILE_ERROR.getValue());
             return response;
         }
         // 3. 编译成功后，执行代码，得到输出结果
-        ExecuteResponse response = runInputCases(inputs, userCodeParentDirName, memoryCollector);
+        response = runInputCases(inputs, userCodeParentDirName, memoryCollector);
         // 关闭内存监听
         memoryCollector.close();
         // 4. 文件清理

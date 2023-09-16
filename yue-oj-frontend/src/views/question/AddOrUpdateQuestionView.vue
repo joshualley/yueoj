@@ -33,14 +33,6 @@
                 :min="0"
               />
             </a-form-item>
-            <a-form-item field="judgeConfig.stackLimit" label="堆栈限制(KB)">
-              <a-input-number
-                v-model="form.judgeConfig!.stackLimit"
-                placeholder="请输入堆栈限制"
-                mode="button"
-                :min="0"
-              />
-            </a-form-item>
           </a-card>
         </a-space>
       </a-form-item>
@@ -137,8 +129,11 @@ onMounted(async () => {
       // 将属性重新赋值给form
       console.log(resp.data?.judgeConfig);
       form.value = resp.data ?? {};
-      form.value.judgeConfig = JSON.parse(
-        JSON.stringify(resp.data?.judgeConfig),
+      form.value.judgeConfig!.timeLimit = Number(
+        resp.data?.judgeConfig?.timeLimit?.toString(),
+      );
+      form.value.judgeConfig!.memoryLimit = Number(
+        resp.data?.judgeConfig?.memoryLimit?.toString(),
       );
     } else {
       Message.error("未能加载出题目：" + resp.message);

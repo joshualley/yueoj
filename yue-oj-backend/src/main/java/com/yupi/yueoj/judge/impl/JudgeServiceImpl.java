@@ -100,10 +100,9 @@ public class JudgeServiceImpl implements JudgeService {
         // 3) 调用判题策略进行判题
         JudgeConfig judgeConfig = JSONUtil.toBean(question.getJudgeConfig(), JudgeConfig.class);
         JudgeContext judgeContext = JudgeContext.builder()
-                .judgeInfo(response.getJudgeInfo())
+                .sandCodeBoxResponse(response)
                 .judgeCases(judgeCaseList)
                 .judgeConfig(judgeConfig)
-                .outputs(response.getOutputs())
                 .language(language)
                 .inputs(inputs)
                 .build();

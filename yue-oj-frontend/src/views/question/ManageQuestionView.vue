@@ -57,10 +57,6 @@
             title="时间限制"
             data-index="judgeConfig.timeLimit"
           ></a-table-column>
-          <a-table-column
-            title="堆栈限制"
-            data-index="judgeConfig.stackLimit"
-          ></a-table-column>
         </a-table-column>
         <a-table-column title="操作">
           <template #cell="{ record }">
