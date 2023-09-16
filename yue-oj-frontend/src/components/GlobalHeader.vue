@@ -1,5 +1,5 @@
 <template>
-  <div id="globalHeader">
+  <div class="global-header">
     <a-card>
       <a-row align="center" :wrap="false">
         <a-col flex="auto">
@@ -34,23 +34,28 @@
         </a-col>
         <a-col flex="100px">
           <template v-if="loginUser?.userRole !== AccessEnum.NotLogin">
-            <a-dropdown @select="onUsernameClick">
-              <div class="username-p">
-                <div>{{ loginUser?.userName }}</div>
-              </div>
+            <a-popover>
+              <a-avatar :style="{ background: '#14a9f8' }">
+                {{ loginUser?.userName }}
+              </a-avatar>
               <template #content>
                 <a-doption value="/user/info">个人信息</a-doption>
                 <a-doption value="/user" @click="onLogoutClick">登出</a-doption>
               </template>
-            </a-dropdown>
+            </a-popover>
           </template>
           <template v-else>
-            <a href="/user/login">未登录</a>
+            <a-button
+              type="outline"
+              @click="() => router.replace('/user/login')"
+            >
+              登录
+            </a-button>
           </template>
         </a-col>
       </a-row>
     </a-card>
-    <a-space style="margin: 15px 0 0 15px">
+    <a-space style="margin: 15px 0 0 0">
       <a-button type="outline" @click="() => router.back()">
         <template #icon>
           <icon-arrow-left />
@@ -75,6 +80,7 @@ import { State } from "@/store/type";
 import checkAccess from "@/access/CheckAccess";
 import AccessEnum from "@/access/AccessEnum";
 import { UserControllerService } from "@/api";
+import { onMounted } from "vue";
 
 const router = useRouter();
 const store = useStore<State>();
@@ -87,12 +93,31 @@ const loginUser = ref(store.state.user?.loginUser);
 const menus = ref<RouteRecordRaw[]>([]);
 
 /**
+ * 过滤调无权限或者隐藏的菜单项
+ * @param item
+ */
+const filterMenu = (item: RouteRecordRaw): boolean => {
+  if (item.meta?.hide) {
+    return false;
+  }
+  const access: AccessEnum = (item?.meta?.access ??
+    AccessEnum.NotLogin) as AccessEnum;
+  // console.log("filterMenu", item.name, access, r);
+  return checkAccess(loginUser.value, access);
+};
+
+/**
  * 加载菜单
  */
-const loadMenus = () => {
-  // 请求后获取用户及有权限的菜单
-  loginUser.value = store.state.user?.loginUser;
-  console.log(loginUser.value);
+const loadMenus = async () => {
+  // 获取当前登录用户
+  let user = store.state.user.loginUser;
+  if (!user || user.userRole === AccessEnum.NotLogin) {
+    await store.dispatch("getLoginUser");
+    user = store.state.user.loginUser;
+  }
+  loginUser.value = user;
+  // console.log("loadMenus", routes);
   let fliterMenus = routes.filter(filterMenu);
   // 检查2级菜单的权限
   for (let i = 0; i < fliterMenus.length; i++) {
@@ -124,30 +149,12 @@ const onMenuClick = (path: string) => {
   });
 };
 
-const onUsernameClick = (
-  v: string | number | Record<string, any> | undefined,
-) => {
-  console.log(v);
-};
-
-/**
- * 过滤调无权限或者隐藏的菜单项
- * @param item
- */
-const filterMenu = (item: RouteRecordRaw): boolean => {
-  if (item.meta?.hide) {
-    return false;
-  }
-  const access: AccessEnum = (item?.meta?.access ??
-    AccessEnum.NotLogin) as AccessEnum;
-  if (!checkAccess(loginUser.value, access)) {
-    return false;
-  }
-  return true;
-};
+onMounted(() => {
+  loadMenus();
+});
 
 router.afterEach((to, from) => {
-  loadMenus();
+  // loadMenus();
   currPath.value = to;
   fromPath.value = from;
   selectedKeys.value = [to.path];
@@ -155,6 +162,10 @@ router.afterEach((to, from) => {
 </script>
 
 <style scoped>
+.global-header {
+  max-width: 1280px;
+  margin: 0 auto;
+}
 .title-bar {
   display: flex;
   align-items: center;
@@ -165,16 +176,5 @@ router.afterEach((to, from) => {
 .title {
   color: black;
   margin: 0 10px;
-}
-.username-p {
-  background: skyblue;
-  text-align: center;
-  color: white;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 25px;
 }
 </style>

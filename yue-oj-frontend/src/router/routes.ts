@@ -88,6 +88,7 @@ const routes: Array<RouteRecordRaw> = [
           import("../views/question/AddOrUpdateQuestionView.vue"),
         meta: {
           access: AccessEnum.User,
+          hide: true,
         },
       },
       {
@@ -104,7 +105,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/noauth",
-    name: "没权限",
+    name: "无权限",
     component: () => import("../views/NoAuthView.vue"),
     meta: {
       hide: true,

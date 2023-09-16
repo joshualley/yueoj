@@ -1,12 +1,14 @@
 <template>
   <div class="question-submit-view">
-    <a-input-search
-      v-model="searchText"
-      :style="{ minWidth: '320px', margin: '10px 0' }"
-      placeholder="请输入要搜索的关键字..."
-      @press-enter="onSearch"
-      @search="onSearch"
-    />
+    <a-space>
+      <a-input-search
+        v-model="searchText"
+        :style="{ minWidth: '320px', margin: '10px 0' }"
+        placeholder="请输入要搜索的关键字..."
+        @press-enter="onSearch"
+        @search="onSearch"
+      />
+    </a-space>
     <a-table
       :data="questionSubmits"
       :pagination="{
@@ -18,7 +20,7 @@
       @page-change="onPageChange"
     >
       <template #columns>
-        <a-table-column title="创建日期" data-index="createTime">
+        <a-table-column title="创建日期" data-index="createTime" align="center">
           <template #cell="{ record }">
             {{ moment(record.createTime).format("YYYY/MM/DD") }}
           </template>
@@ -26,12 +28,14 @@
         <a-table-column
           title="提交用户"
           data-index="userVO.userName"
+          align="center"
         ></a-table-column>
         <a-table-column
           title="题目"
           data-index="questionVO.title"
+          align="center"
         ></a-table-column>
-        <a-table-column title="标签">
+        <a-table-column title="标签" align="center">
           <template #cell="{ record }">
             <a-space>
               <a-tag
@@ -45,23 +49,29 @@
             </a-space>
           </template>
         </a-table-column>
-        <a-table-column title="语言" data-index="language"></a-table-column>
-        <a-table-column title="状态" data-index="">
+        <a-table-column
+          title="语言"
+          data-index="language"
+          align="center"
+        ></a-table-column>
+        <a-table-column title="状态" align="center">
           <template #cell="{ record }">
             <div>{{ QustionSubmitStatusMap(record.status) }}</div>
           </template>
         </a-table-column>
-        <a-table-column title="资源耗用">
+        <a-table-column title="资源耗用" align="center">
           <a-table-column
             title="内存消耗(kb)"
             data-index="judgeInfo.memory"
+            align="center"
           ></a-table-column>
           <a-table-column
             title="时间消耗(ms)"
             data-index="judgeInfo.time"
+            align="center"
           ></a-table-column>
         </a-table-column>
-        <a-table-column title="操作">
+        <a-table-column title="操作" align="center">
           <template #cell="{ record }">
             <a-space>
               <a-button type="outline" @click="doQuestion(record)">

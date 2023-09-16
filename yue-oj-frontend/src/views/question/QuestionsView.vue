@@ -1,12 +1,14 @@
 <template>
   <div class="questions-view">
-    <a-input-search
-      v-model="searchText"
-      :style="{ minWidth: '320px', margin: '10px 0' }"
-      placeholder="请输入要搜索的关键字..."
-      @press-enter="onSearch"
-      @search="onSearch"
-    />
+    <a-space>
+      <a-input-search
+        v-model="searchText"
+        :style="{ minWidth: '320px', margin: '10px 0' }"
+        placeholder="请输入要搜索的关键字..."
+        @press-enter="onSearch"
+        @search="onSearch"
+      />
+    </a-space>
     <a-table
       :data="questions"
       :pagination="{
@@ -18,13 +20,17 @@
       @page-change="onPageChange"
     >
       <template #columns>
-        <a-table-column title="创建日期" data-index="createTime">
+        <a-table-column title="创建日期" data-index="createTime" align="center">
           <template #cell="{ record }">
             {{ moment(record.createTime).format("YYYY/MM/DD") }}
           </template>
         </a-table-column>
-        <a-table-column title="标题" data-index="title"></a-table-column>
-        <a-table-column title="标签">
+        <a-table-column
+          title="标题"
+          data-index="title"
+          align="center"
+        ></a-table-column>
+        <a-table-column title="标签" align="center">
           <template #cell="{ record }">
             <a-space>
               <a-tag
@@ -38,7 +44,7 @@
             </a-space>
           </template>
         </a-table-column>
-        <a-table-column title="通过率">
+        <a-table-column title="通过率" align="center">
           <template #cell="{ record }">
             <p>
               {{
@@ -53,17 +59,19 @@
           </template>
         </a-table-column>
 
-        <a-table-column title="判题配置">
+        <a-table-column title="判题配置" align="center">
           <a-table-column
             title="内存限制"
             data-index="judgeConfig.memoryLimit"
+            align="center"
           ></a-table-column>
           <a-table-column
             title="时间限制"
             data-index="judgeConfig.timeLimit"
+            align="center"
           ></a-table-column>
         </a-table-column>
-        <a-table-column title="操作">
+        <a-table-column title="操作" align="center">
           <template #cell="{ record }">
             <a-space>
               <a-button type="outline" @click="doQuestion(record)">

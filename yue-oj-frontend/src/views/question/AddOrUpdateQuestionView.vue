@@ -1,6 +1,11 @@
 <template>
   <div class="add-question">
-    <a-form :model="form" @submit="onSubmit" auto-label-width>
+    <a-form
+      :model="form"
+      @submit="onSubmit"
+      auto-label-width
+      label-align="left"
+    >
       <a-form-item field="title" label="标题">
         <a-input v-model="form.title" placeholder="请输入标题" />
       </a-form-item>
@@ -208,6 +213,8 @@ const onAddJudgeCase = () => {
 
 <style scoped>
 .add-question {
-  margin: 10px 10px 40px 10px;
+  /* margin: 10px 10px 40px 10px; */
+  margin: 0 auto;
+  max-width: 1280px;
 }
 </style>

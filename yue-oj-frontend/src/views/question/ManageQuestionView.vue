@@ -1,12 +1,15 @@
 <template>
   <div class="manage-question">
-    <a-input-search
-      v-model="searchText"
-      :style="{ minWidth: '320px', margin: '10px 0' }"
-      placeholder="请输入要搜索的关键字..."
-      @press-enter="onSearch"
-      @search="onSearch"
-    />
+    <a-space>
+      <a-input-search
+        v-model="searchText"
+        :style="{ minWidth: '320px', margin: '10px 0' }"
+        placeholder="请输入要搜索的关键字..."
+        @press-enter="onSearch"
+        @search="onSearch"
+      />
+      <a-button type="outline" @click="onCreateQuestion"> 创建题目 </a-button>
+    </a-space>
     <a-table
       :data="questions"
       :pagination="{
@@ -18,9 +21,22 @@
       @page-change="onPageChange"
     >
       <template #columns>
-        <a-table-column title="ID" data-index="id"></a-table-column>
-        <a-table-column title="标题" data-index="title"></a-table-column>
-        <a-table-column title="标签" data-index="tags">
+        <a-table-column title="创建日期" data-index="createTime" align="center">
+          <template #cell="{ record }">
+            {{ moment(record.createTime).format("YYYY/MM/DD") }}
+          </template>
+        </a-table-column>
+        <a-table-column
+          title="创建用户"
+          data-index="userVO.userName"
+          align="center"
+        ></a-table-column>
+        <a-table-column
+          title="题目"
+          data-index="title"
+          align="center"
+        ></a-table-column>
+        <a-table-column title="标签" align="center">
           <template #cell="{ record }">
             <a-space>
               <a-tag
@@ -35,7 +51,7 @@
           </template>
         </a-table-column>
 
-        <a-table-column title="通过率">
+        <a-table-column title="通过率" align="center">
           <template #cell="{ record }">
             <p>
               {{
@@ -48,17 +64,19 @@
           </template>
         </a-table-column>
 
-        <a-table-column title="判题配置">
+        <a-table-column title="判题配置" align="center">
           <a-table-column
             title="内存限制"
             data-index="judgeConfig.memoryLimit"
+            align="center"
           ></a-table-column>
           <a-table-column
             title="时间限制"
             data-index="judgeConfig.timeLimit"
+            align="center"
           ></a-table-column>
         </a-table-column>
-        <a-table-column title="操作">
+        <a-table-column title="操作" align="center">
           <template #cell="{ record }">
             <a-space>
               <a-button type="outline" @click="onUpdateRow(record)">
@@ -85,6 +103,7 @@ import { Message } from "@arco-design/web-vue";
 import { watchEffect } from "vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import moment from "moment";
 
 const router = useRouter();
 
@@ -108,6 +127,13 @@ const onSearch = () => {
     current: 1, // 返回搜索后的第一页
     title: searchText.value,
   };
+};
+
+/**
+ * 跳转到创建题目页
+ */
+const onCreateQuestion = () => {
+  router.push("/question/add");
 };
 
 /**

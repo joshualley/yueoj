@@ -12,7 +12,7 @@ import GlobalHeader from "@/components/GlobalHeader.vue";
         <router-view />
       </a-layout-content>
       <a-layout-footer class="footer">
-        <div>Copyright©2023 Jose</div>
+        <div>Copyright © 2023 Jose</div>
       </a-layout-footer>
     </a-layout>
   </div>

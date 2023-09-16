@@ -1,7 +1,7 @@
 <template>
   <div class="do-question">
-    <a-row :gutter="8">
-      <a-col :span="12">
+    <a-row :gutter="8" style="margin: 0 auto; max-width: 1280px">
+      <a-col :span="8">
         <a-card class="q-intruction">
           <a-tabs default-active-key="question">
             <a-tab-pane key="question" title="题目描述">
@@ -50,7 +50,7 @@
           </a-tabs>
         </a-card>
       </a-col>
-      <a-col :span="12">
+      <a-col :span="16">
         <a-card class="q-editor">
           <a-form-item field="title" label="语言">
             <a-space direction="horizontal">
@@ -167,10 +167,8 @@ const onSubmit = async () => {
 }
 .q-editor {
   min-height: 80vh;
-  margin-right: 100px;
 }
 .q-intruction {
-  margin-left: 100px;
   min-height: 80vh;
 }
 </style>

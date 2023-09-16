@@ -1,6 +1,10 @@
 <template>
   <div class="view-question-submit">
-    <a-card :title="questionSubmit?.questionVO?.title" :bordered="false">
+    <a-card
+      :title="questionSubmit?.questionVO?.title"
+      :bordered="false"
+      style="max-width: 1280px; margin: 0 auto"
+    >
       <template #extra>
         <a-space>
           <a-tag
