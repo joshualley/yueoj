@@ -1,31 +1,29 @@
-package com.yupi.yueoj.service.impl;
+package com.valley.yojbackendquestionservice.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yupi.yueoj.common.ErrorCode;
-import com.yupi.yueoj.constant.CommonConstant;
-import com.yupi.yueoj.exception.BusinessException;
-import com.yupi.yueoj.judge.JudgeService;
-import com.yupi.yueoj.model.dto.question.QuestionQueryRequest;
-import com.yupi.yueoj.model.dto.questionsubmit.QuestionSubmitAddRequest;
-import com.yupi.yueoj.model.dto.questionsubmit.QuestionSubmitQueryRequest;
-import com.yupi.yueoj.model.entity.*;
-import com.yupi.yueoj.model.entity.QuestionSubmit;
-import com.yupi.yueoj.model.enums.QuestionSubmitLanguageEnum;
-import com.yupi.yueoj.model.enums.QuestionSubmitStatusEnum;
-import com.yupi.yueoj.model.vo.QuestionSubmitVO;
-import com.yupi.yueoj.model.vo.QuestionVO;
-import com.yupi.yueoj.model.vo.UserVO;
-import com.yupi.yueoj.service.QuestionSubmitService;
-import com.yupi.yueoj.service.QuestionService;
-import com.yupi.yueoj.mapper.QuestionSubmitMapper;
-import com.yupi.yueoj.service.UserService;
-import com.yupi.yueoj.utils.SqlUtils;
+import com.valley.yojbackendcommon.common.ErrorCode;
+import com.valley.yojbackendcommon.constant.CommonConstant;
+import com.valley.yojbackendcommon.exception.BusinessException;
+import com.valley.yojbackendcommon.utils.SqlUtils;
+import com.valley.yojbackendmodel.model.dto.questionsubmit.QuestionSubmitAddRequest;
+import com.valley.yojbackendmodel.model.dto.questionsubmit.QuestionSubmitQueryRequest;
+import com.valley.yojbackendmodel.model.entity.Question;
+import com.valley.yojbackendmodel.model.entity.QuestionSubmit;
+import com.valley.yojbackendmodel.model.entity.User;
+import com.valley.yojbackendmodel.model.enums.QuestionSubmitLanguageEnum;
+import com.valley.yojbackendmodel.model.enums.QuestionSubmitStatusEnum;
+import com.valley.yojbackendmodel.model.vo.QuestionSubmitVO;
+import com.valley.yojbackendmodel.model.vo.QuestionVO;
+import com.valley.yojbackendmodel.model.vo.UserVO;
+import com.valley.yojbackendquestionservice.mapper.QuestionSubmitMapper;
+import com.valley.yojbackendquestionservice.service.QuestionService;
+import com.valley.yojbackendquestionservice.service.QuestionSubmitService;
+import com.valley.yojbackendserviceclient.service.JudgeFeignClient;
+import com.valley.yojbackendserviceclient.service.UserFeignClient;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.aop.framework.AopContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,8 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -45,18 +41,18 @@ import java.util.stream.Collectors;
 */
 @Service
 public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper, QuestionSubmit>
-    implements QuestionSubmitService{
+    implements QuestionSubmitService {
 
     @Resource
     private QuestionService questionService;
 
     @Resource
-    private UserService userService;
+    private UserFeignClient userFeignClient;
 
     // 存在循环依赖，需要开启懒加载
     @Resource
     @Lazy
-    private JudgeService judgeService;
+    private JudgeFeignClient judgeFeignClient;
 
     /**
      * 题目提交
@@ -97,7 +93,7 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         Long questionSubmitId = questionSubmit.getId();
         // 异步执行判题服务
         CompletableFuture.runAsync(() -> {
-           judgeService.doJudge(questionSubmitId);
+            judgeFeignClient.doJudge(questionSubmitId);
         });
         return questionSubmitId;
     }
@@ -181,13 +177,13 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         QuestionSubmitVO questionSubmitVO = QuestionSubmitVO.objToVo(questionSubmit);
         // 脱敏：仅本人及管理员能看到提交的代码
         Long userId = questionSubmit.getUserId();
-        if (loginUser.getId().equals(userId) && !userService.isAdmin(loginUser)) {
+        if (loginUser.getId().equals(userId) && !userFeignClient.isAdmin(loginUser)) {
             questionSubmitVO.setCode(null);
         }
         // 1. 关联查询用户信息
         if (userId != null && userId > 0) {
-            User user = userService.getById(userId);
-            UserVO userVO = userService.getUserVO(user);
+            User user = userFeignClient.getById(userId);
+            UserVO userVO = userFeignClient.getUserVO(user);
             questionSubmitVO.setUserVO(userVO);
         }
         // 2. 关联题目信息

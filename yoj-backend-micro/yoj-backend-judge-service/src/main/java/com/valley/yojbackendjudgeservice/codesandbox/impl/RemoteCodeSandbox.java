@@ -1,12 +1,12 @@
-package com.yupi.yueoj.judge.codesandbox.impl;
+package com.valley.yojbackendjudgeservice.codesandbox.impl;
 
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
-import com.yupi.yueoj.common.ErrorCode;
-import com.yupi.yueoj.exception.BusinessException;
-import com.yupi.yueoj.judge.codesandbox.CodeSandbox;
-import com.yupi.yueoj.judge.codesandbox.model.ExecuteCodeRequest;
-import com.yupi.yueoj.judge.codesandbox.model.ExecuteResponse;
+import com.valley.yojbackendcommon.common.ErrorCode;
+import com.valley.yojbackendcommon.exception.BusinessException;
+import com.valley.yojbackendjudgeservice.codesandbox.CodeSandbox;
+import com.valley.yojbackendmodel.model.codesandbox.ExecuteCodeRequest;
+import com.valley.yojbackendmodel.model.codesandbox.ExecuteResponse;
 import org.apache.commons.lang3.StringUtils;
 
 /**

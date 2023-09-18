@@ -1,4 +1,4 @@
-package com.valley.yoj.common;
+package com.valley.yojbackendcommon.common;
 
 /**
  * 自定义错误码

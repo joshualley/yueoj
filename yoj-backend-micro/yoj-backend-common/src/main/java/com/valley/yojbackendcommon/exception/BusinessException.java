@@ -1,7 +1,7 @@
-package com.valley.yoj.exception;
+package com.valley.yojbackendcommon.exception;
 
 
-import com.valley.yoj.common.ErrorCode;
+import com.valley.yojbackendcommon.common.ErrorCode;
 
 /**
  * 自定义异常类

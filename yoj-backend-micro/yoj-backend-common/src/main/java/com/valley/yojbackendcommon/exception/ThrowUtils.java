@@ -1,6 +1,7 @@
-package com.valley.yoj.exception;
+package com.valley.yojbackendcommon.exception;
 
-import com.yupi.yueoj.common.ErrorCode;
+
+import com.valley.yojbackendcommon.common.ErrorCode;
 
 /**
  * 抛异常工具类

@@ -1,8 +1,9 @@
-package com.yupi.yueoj.judge.codesandbox.impl;
+package com.valley.yojbackendjudgeservice.codesandbox.impl;
 
-import com.yupi.yueoj.judge.codesandbox.CodeSandbox;
-import com.yupi.yueoj.judge.codesandbox.model.ExecuteCodeRequest;
-import com.yupi.yueoj.judge.codesandbox.model.ExecuteResponse;
+
+import com.valley.yojbackendjudgeservice.codesandbox.CodeSandbox;
+import com.valley.yojbackendmodel.model.codesandbox.ExecuteCodeRequest;
+import com.valley.yojbackendmodel.model.codesandbox.ExecuteResponse;
 
 /**
  * 第三方代码沙箱 go-judge

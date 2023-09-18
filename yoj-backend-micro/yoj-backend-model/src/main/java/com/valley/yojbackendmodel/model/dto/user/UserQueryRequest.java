@@ -1,9 +1,10 @@
-package com.yupi.yueoj.model.dto.user;
+package com.valley.yojbackendmodel.model.dto.user;
 
-import com.yupi.yueoj.common.PageRequest;
-import java.io.Serializable;
+import com.valley.yojbackendcommon.common.PageRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
 
 /**
  * 用户查询请求

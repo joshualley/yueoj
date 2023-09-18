@@ -1,4 +1,4 @@
-package com.valley.yoj.utils;
+package com.valley.yojbackendcommon.utils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;

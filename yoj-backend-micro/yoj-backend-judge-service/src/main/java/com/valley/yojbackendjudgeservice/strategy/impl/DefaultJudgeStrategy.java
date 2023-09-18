@@ -1,13 +1,14 @@
-package com.yupi.yueoj.judge.strategy.impl;
+package com.valley.yojbackendjudgeservice.strategy.impl;
 
-import com.yupi.yueoj.judge.codesandbox.model.ExecuteResponse;
-import com.yupi.yueoj.judge.codesandbox.model.enums.ExecuteStatusEnum;
-import com.yupi.yueoj.judge.strategy.JudgeContext;
-import com.yupi.yueoj.judge.strategy.JudgeStrategy;
-import com.yupi.yueoj.model.dto.question.JudgeCase;
-import com.yupi.yueoj.model.dto.question.JudgeConfig;
-import com.yupi.yueoj.judge.codesandbox.model.JudgeInfo;
-import com.yupi.yueoj.model.enums.JudgeInfoMessageEnum;
+
+import com.valley.yojbackendjudgeservice.strategy.JudgeContext;
+import com.valley.yojbackendjudgeservice.strategy.JudgeStrategy;
+import com.valley.yojbackendmodel.model.codesandbox.ExecuteResponse;
+import com.valley.yojbackendmodel.model.codesandbox.JudgeInfo;
+import com.valley.yojbackendmodel.model.codesandbox.enums.ExecuteStatusEnum;
+import com.valley.yojbackendmodel.model.dto.question.JudgeCase;
+import com.valley.yojbackendmodel.model.dto.question.JudgeConfig;
+import com.valley.yojbackendmodel.model.enums.JudgeInfoMessageEnum;
 
 import java.util.List;
 

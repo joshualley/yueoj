@@ -1,6 +1,7 @@
-package com.yupi.yueoj.judge.strategy;
+package com.valley.yojbackendjudgeservice.strategy;
 
-import com.yupi.yueoj.judge.codesandbox.model.JudgeInfo;
+
+import com.valley.yojbackendmodel.model.codesandbox.JudgeInfo;
 
 /**
  * 判题策略接口

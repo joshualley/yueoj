@@ -1,7 +1,8 @@
-package com.yupi.yueoj.model.dto.file;
+package com.valley.yojbackendmodel.model.dto.file;
+
+import lombok.Data;
 
 import java.io.Serializable;
-import lombok.Data;
 
 /**
  * 文件上传请求

@@ -1,27 +1,27 @@
-package com.yupi.yueoj.controller;
+package com.valley.yojbackendquestionservice.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.gson.Gson;
-import com.yupi.yueoj.annotation.AuthCheck;
-import com.yupi.yueoj.common.BaseResponse;
-import com.yupi.yueoj.common.DeleteRequest;
-import com.yupi.yueoj.common.ErrorCode;
-import com.yupi.yueoj.common.ResultUtils;
-import com.yupi.yueoj.constant.UserConstant;
-import com.yupi.yueoj.exception.BusinessException;
-import com.yupi.yueoj.exception.ThrowUtils;
-import com.yupi.yueoj.judge.JudgeService;
-import com.yupi.yueoj.model.dto.question.*;
-import com.yupi.yueoj.model.dto.questionsubmit.QuestionSubmitAddRequest;
-import com.yupi.yueoj.model.dto.questionsubmit.QuestionSubmitQueryRequest;
-import com.yupi.yueoj.model.entity.Question;
-import com.yupi.yueoj.model.entity.QuestionSubmit;
-import com.yupi.yueoj.model.entity.User;
-import com.yupi.yueoj.model.vo.QuestionSubmitVO;
-import com.yupi.yueoj.model.vo.QuestionVO;
-import com.yupi.yueoj.service.QuestionService;
-import com.yupi.yueoj.service.QuestionSubmitService;
-import com.yupi.yueoj.service.UserService;
+import com.valley.yojbackendcommon.annotation.AuthCheck;
+import com.valley.yojbackendcommon.common.BaseResponse;
+import com.valley.yojbackendcommon.common.DeleteRequest;
+import com.valley.yojbackendcommon.common.ErrorCode;
+import com.valley.yojbackendcommon.common.ResultUtils;
+import com.valley.yojbackendcommon.constant.UserConstant;
+import com.valley.yojbackendcommon.exception.BusinessException;
+import com.valley.yojbackendcommon.exception.ThrowUtils;
+import com.valley.yojbackendmodel.model.dto.question.*;
+import com.valley.yojbackendmodel.model.dto.questionsubmit.QuestionSubmitAddRequest;
+import com.valley.yojbackendmodel.model.dto.questionsubmit.QuestionSubmitQueryRequest;
+import com.valley.yojbackendmodel.model.entity.Question;
+import com.valley.yojbackendmodel.model.entity.QuestionSubmit;
+import com.valley.yojbackendmodel.model.entity.User;
+import com.valley.yojbackendmodel.model.vo.QuestionSubmitVO;
+import com.valley.yojbackendmodel.model.vo.QuestionVO;
+import com.valley.yojbackendquestionservice.service.QuestionService;
+import com.valley.yojbackendquestionservice.service.QuestionSubmitService;
+import com.valley.yojbackendserviceclient.service.JudgeFeignClient;
+import com.valley.yojbackendserviceclient.service.UserFeignClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +38,7 @@ import java.util.concurrent.CompletableFuture;
  * @from <a href="https://yupi.icu">编程导航知识星球</a>
  */
 @RestController
-@RequestMapping("/question")
+@RequestMapping("/")
 @Slf4j
 public class QuestionController {
 
@@ -49,10 +49,10 @@ public class QuestionController {
     private QuestionSubmitService questionSubmitService;
 
     @Resource
-    private UserService userService;
+    private UserFeignClient userFeignClient;
 
     @Resource
-    private JudgeService judgeService;
+    private JudgeFeignClient judgeFeignClient;
 
     private final static Gson GSON = new Gson();
 
@@ -86,7 +86,7 @@ public class QuestionController {
         }
 
         questionService.validQuestion(question, true);
-        User loginUser = userService.getLoginUser(request);
+        User loginUser = userFeignClient.getLoginUser(request);
         question.setUserId(loginUser.getId());
         question.setFavourNum(0);
         question.setThumbNum(0);
@@ -109,13 +109,13 @@ public class QuestionController {
         if (deleteRequest == null || deleteRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        User user = userService.getLoginUser(request);
+        User user = userFeignClient.getLoginUser(request);
         long id = deleteRequest.getId();
         // 判断是否存在
         Question oldQuestion = questionService.getById(id);
         ThrowUtils.throwIf(oldQuestion == null, ErrorCode.NOT_FOUND_ERROR);
         // 仅本人或管理员可删除
-        if (!oldQuestion.getUserId().equals(user.getId()) && !userService.isAdmin(request)) {
+        if (!oldQuestion.getUserId().equals(user.getId()) && !userFeignClient.isAdmin(user)) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
         boolean b = questionService.removeById(id);
@@ -193,8 +193,8 @@ public class QuestionController {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
         }
         QuestionVO questionVO = questionService.getQuestionVO(question, request);
-        User loginUser = userService.getLoginUser(request);
-        if (!userService.isAdmin(loginUser)) {
+        User loginUser = userFeignClient.getLoginUser(request);
+        if (!userFeignClient.isAdmin(loginUser)) {
             // 仅允许非管理员用户获取到自己创建的题目
             if (!question.getUserId().equals(loginUser.getId())) {
                 throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
@@ -235,7 +235,7 @@ public class QuestionController {
         if (questionQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        User loginUser = userService.getLoginUser(request);
+        User loginUser = userFeignClient.getLoginUser(request);
         questionQueryRequest.setUserId(loginUser.getId());
         long current = questionQueryRequest.getCurrent();
         long size = questionQueryRequest.getPageSize();
@@ -276,13 +276,13 @@ public class QuestionController {
         }
         // 参数校验
         questionService.validQuestion(question, false);
-        User loginUser = userService.getLoginUser(request);
+        User loginUser = userFeignClient.getLoginUser(request);
         long id = questionEditRequest.getId();
         // 判断是否存在
         Question oldQuestion = questionService.getById(id);
         ThrowUtils.throwIf(oldQuestion == null, ErrorCode.NOT_FOUND_ERROR);
         // 仅本人或管理员可编辑
-        if (!oldQuestion.getUserId().equals(loginUser.getId()) && !userService.isAdmin(loginUser)) {
+        if (!oldQuestion.getUserId().equals(loginUser.getId()) && !userFeignClient.isAdmin(loginUser)) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
         boolean result = questionService.updateById(question);
@@ -303,7 +303,7 @@ public class QuestionController {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         // 登录才能提交题目
-        final User loginUser = userService.getLoginUser(request);
+        final User loginUser = userFeignClient.getLoginUser(request);
         long questionSubmitId = questionSubmitService.doQuestionSubmit(questionSubmitAddRequest, loginUser);
         return ResultUtils.success(questionSubmitId);
     }
@@ -313,7 +313,7 @@ public class QuestionController {
         if (id <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        User loginUser = userService.getLoginUser(request);
+        User loginUser = userFeignClient.getLoginUser(request);
         QuestionSubmit questionSubmit = questionSubmitService.getById(id);
         if (questionSubmit == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "题目提交记录不存在");
@@ -329,7 +329,7 @@ public class QuestionController {
         long size = questionSubmitQueryRequest.getPageSize();
         Page<QuestionSubmit> page = questionSubmitService.page(new Page<>(current, size),
                 questionSubmitService.getQueryWrapper(questionSubmitQueryRequest));
-        User loginUser = userService.getLoginUser(request);
+        User loginUser = userFeignClient.getLoginUser(request);
         return ResultUtils.success(questionSubmitService.getQuestionSubmitVOPage(page, loginUser, request));
     }
 
@@ -343,7 +343,7 @@ public class QuestionController {
     public BaseResponse<QuestionSubmitVO> doJudge(long id, HttpServletRequest request) {
         // 异步执行判题服务
         CompletableFuture.runAsync(() -> {
-            judgeService.doJudge(id);
+            judgeFeignClient.doJudge(id);
         });
         return getQuestionSubmitVOById(id, request);
     }

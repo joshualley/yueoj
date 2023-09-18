@@ -1,7 +1,7 @@
-package com.yupi.yueoj.mapper;
+package com.valley.yojbackenduserservice.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.yupi.yueoj.model.entity.User;
+import com.valley.yojbackendmodel.model.entity.User;
 
 /**
  * 用户数据库操作

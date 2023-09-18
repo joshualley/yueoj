@@ -1,11 +1,12 @@
-package com.yupi.yueoj.service;
+package com.valley.yojbackendquestionservice.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yupi.yueoj.model.dto.question.QuestionQueryRequest;
-import com.yupi.yueoj.model.entity.Question;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.yupi.yueoj.model.vo.QuestionVO;
+import com.valley.yojbackendmodel.model.dto.question.QuestionQueryRequest;
+import com.valley.yojbackendmodel.model.entity.Question;
+import com.valley.yojbackendmodel.model.vo.QuestionVO;
+
 
 import javax.servlet.http.HttpServletRequest;
 

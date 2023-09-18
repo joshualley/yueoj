@@ -1,31 +1,33 @@
-package com.yupi.yueoj.service.impl;
-
-import static com.yupi.yueoj.constant.UserConstant.USER_LOGIN_STATE;
+package com.valley.yojbackenduserservice.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yupi.yueoj.common.ErrorCode;
-import com.yupi.yueoj.constant.CommonConstant;
-import com.yupi.yueoj.exception.BusinessException;
-import com.yupi.yueoj.mapper.UserMapper;
-import com.yupi.yueoj.model.dto.user.UserQueryRequest;
-import com.yupi.yueoj.model.entity.User;
-import com.yupi.yueoj.model.enums.UserRoleEnum;
-import com.yupi.yueoj.model.vo.LoginUserVO;
-import com.yupi.yueoj.model.vo.UserVO;
-import com.yupi.yueoj.service.UserService;
-import com.yupi.yueoj.utils.SqlUtils;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
+import com.valley.yojbackendcommon.common.ErrorCode;
+import com.valley.yojbackendcommon.constant.CommonConstant;
+import com.valley.yojbackendcommon.exception.BusinessException;
+import com.valley.yojbackendcommon.utils.SqlUtils;
+import com.valley.yojbackendmodel.model.dto.user.UserQueryRequest;
+import com.valley.yojbackendmodel.model.entity.User;
+import com.valley.yojbackendmodel.model.enums.UserRoleEnum;
+import com.valley.yojbackendmodel.model.vo.LoginUserVO;
+import com.valley.yojbackendmodel.model.vo.UserVO;
+import com.valley.yojbackenduserservice.mapper.UserMapper;
+import com.valley.yojbackenduserservice.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.valley.yojbackendcommon.constant.UserConstant.USER_LOGIN_STATE;
+
 
 /**
  * 用户服务实现

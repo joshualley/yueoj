@@ -1,4 +1,4 @@
-package com.yupi.yueoj.config;
+package com.valley.yojbackendcommon.config;
 
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;

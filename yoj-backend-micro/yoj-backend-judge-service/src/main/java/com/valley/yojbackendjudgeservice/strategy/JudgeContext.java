@@ -1,9 +1,8 @@
-package com.yupi.yueoj.judge.strategy;
+package com.valley.yojbackendjudgeservice.strategy;
 
-import com.yupi.yueoj.judge.codesandbox.model.ExecuteResponse;
-import com.yupi.yueoj.model.dto.question.JudgeCase;
-import com.yupi.yueoj.model.dto.question.JudgeConfig;
-import com.yupi.yueoj.judge.codesandbox.model.JudgeInfo;
+import com.valley.yojbackendmodel.model.codesandbox.ExecuteResponse;
+import com.valley.yojbackendmodel.model.dto.question.JudgeCase;
+import com.valley.yojbackendmodel.model.dto.question.JudgeConfig;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -1,40 +1,31 @@
-package com.yupi.yueoj.service.impl;
+package com.valley.yojbackendquestionservice.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.google.gson.Gson;
-import com.yupi.yueoj.common.ErrorCode;
-import com.yupi.yueoj.constant.CommonConstant;
-import com.yupi.yueoj.exception.BusinessException;
-import com.yupi.yueoj.exception.ThrowUtils;
-import com.yupi.yueoj.model.dto.question.QuestionQueryRequest;
-import com.yupi.yueoj.model.entity.*;
-import com.yupi.yueoj.model.vo.QuestionVO;
-import com.yupi.yueoj.model.vo.UserVO;
-import com.yupi.yueoj.service.QuestionService;
-import com.yupi.yueoj.mapper.QuestionMapper;
-import com.yupi.yueoj.service.UserService;
-import com.yupi.yueoj.utils.SqlUtils;
+import com.valley.yojbackendcommon.common.ErrorCode;
+import com.valley.yojbackendcommon.constant.CommonConstant;
+import com.valley.yojbackendcommon.exception.BusinessException;
+import com.valley.yojbackendcommon.exception.ThrowUtils;
+import com.valley.yojbackendcommon.utils.SqlUtils;
+import com.valley.yojbackendmodel.model.dto.question.QuestionQueryRequest;
+import com.valley.yojbackendmodel.model.entity.Question;
+import com.valley.yojbackendmodel.model.entity.User;
+import com.valley.yojbackendmodel.model.vo.QuestionVO;
+import com.valley.yojbackendmodel.model.vo.UserVO;
+import com.valley.yojbackendquestionservice.mapper.QuestionMapper;
+import com.valley.yojbackendquestionservice.service.QuestionService;
+import com.valley.yojbackendserviceclient.service.UserFeignClient;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.sort.SortBuilder;
-import org.elasticsearch.search.sort.SortBuilders;
-import org.elasticsearch.search.sort.SortOrder;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
-import org.springframework.data.elasticsearch.core.SearchHit;
-import org.springframework.data.elasticsearch.core.SearchHits;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -44,11 +35,9 @@ import java.util.stream.Collectors;
 */
 @Service
 public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
-    implements QuestionService{
-    private final static Gson GSON = new Gson();
-
+    implements QuestionService {
     @Resource
-    private UserService userService;
+    private UserFeignClient userFeignClient;
 
     /**
      * 校验题目是否合法
@@ -137,9 +126,9 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
         Long userId = question.getUserId();
         User user = null;
         if (userId != null && userId > 0) {
-            user = userService.getById(userId);
+            user = userFeignClient.getById(userId);
         }
-        UserVO userVO = userService.getUserVO(user);
+        UserVO userVO = userFeignClient.getUserVO(user);
         questionVO.setUserVO(userVO);
         return questionVO;
     }
@@ -153,7 +142,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
         }
         // 1. 关联查询用户信息
         Set<Long> userIdSet = questionList.stream().map(Question::getUserId).collect(Collectors.toSet());
-        Map<Long, List<User>> userIdUserListMap = userService.listByIds(userIdSet).stream()
+        Map<Long, List<User>> userIdUserListMap = userFeignClient.listByIds(userIdSet).stream()
                 .collect(Collectors.groupingBy(User::getId));
         // 填充信息
         List<QuestionVO> questionVOList = questionList.stream().map(question -> {
@@ -163,7 +152,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
             if (userIdUserListMap.containsKey(userId)) {
                 user = userIdUserListMap.get(userId).get(0);
             }
-            questionVO.setUserVO(userService.getUserVO(user));
+            questionVO.setUserVO(userFeignClient.getUserVO(user));
             return questionVO;
         }).collect(Collectors.toList());
         questionVOPage.setRecords(questionVOList);

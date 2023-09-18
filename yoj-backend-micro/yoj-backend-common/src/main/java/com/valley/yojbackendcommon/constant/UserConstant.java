@@ -1,4 +1,4 @@
-package com.valley.yoj.constant;
+package com.valley.yojbackendcommon.constant;
 
 /**
  * 用户常量

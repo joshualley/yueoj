@@ -1,8 +1,8 @@
-package com.yupi.yueoj.model.vo;
+package com.valley.yojbackendmodel.model.vo;
 
 import cn.hutool.json.JSONUtil;
-import com.yupi.yueoj.judge.codesandbox.model.JudgeInfo;
-import com.yupi.yueoj.model.entity.QuestionSubmit;
+import com.valley.yojbackendmodel.model.codesandbox.JudgeInfo;
+import com.valley.yojbackendmodel.model.entity.QuestionSubmit;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 

@@ -1,10 +1,8 @@
-package com.yupi.yueoj.model.dto.questionsubmit;
+package com.valley.yojbackendmodel.model.dto.questionsubmit;
 
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
 
 /**
  * 创建请求

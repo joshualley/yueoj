@@ -1,53 +1,28 @@
 package com.valley.yojbackendserviceclient.service;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.IService;
-import com.valley.yojbackendmodel.model.dto.question.QuestionQueryRequest;
 import com.valley.yojbackendmodel.model.entity.Question;
-import com.valley.yojbackendmodel.model.vo.QuestionVO;
+import com.valley.yojbackendmodel.model.entity.QuestionSubmit;
 import org.springframework.cloud.openfeign.FeignClient;
-
-import javax.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
 * @author joshu
 * @description 针对表【question(题目)】的数据库操作Service
-* @createDate 2023-09-08 10:46:22
 */
-@FeignClient(name = "yoj-backend-question-service")
-public interface QuestionService extends IService<Question> {
-    /**
-     * 校验
-     *
-     * @param question
-     * @param add
-     */
-    void validQuestion(Question question, boolean add);
+@FeignClient(name = "yoj-backend-question-service", path = "/api/question/inner")
+public interface QuestionFeignClient {
+    @GetMapping("/get/id")
+    Question getQuestionById(@RequestParam("questionId") long questionId);
 
-    /**
-     * 获取查询条件
-     *
-     * @param questionQueryRequest
-     * @return
-     */
-    QueryWrapper<Question> getQueryWrapper(QuestionQueryRequest questionQueryRequest);
+    @PostMapping("/update")
+    boolean updateQuestionById(@RequestBody Question question);
 
-    /**
-     * 获取问题的封装
-     *
-     * @param question
-     * @param request
-     * @return
-     */
-    QuestionVO getQuestionVO(Question question, HttpServletRequest request);
+    @GetMapping("/submit/get/id")
+    QuestionSubmit getQuestionSubmitById(@RequestParam("questionSubmitId") long questionSubmitId);
 
-    /**
-     * 分页获取问题的封装
-     *
-     * @param questionPage
-     * @param request
-     * @return
-     */
-    Page<QuestionVO> getQuestionVOPage(Page<Question> questionPage, HttpServletRequest request);
+    @PostMapping("/submit/update")
+    boolean updateQuestionSubmitById(@RequestBody QuestionSubmit questionSubmit);
 }

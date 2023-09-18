@@ -1,4 +1,4 @@
-package com.valley.yoj.utils;
+package com.valley.yojbackendcommon.utils;
 
 import org.apache.commons.lang3.StringUtils;
 

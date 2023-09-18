@@ -1,7 +1,8 @@
-package com.yupi.yueoj.model.dto.user;
+package com.valley.yojbackendmodel.model.dto.user;
+
+import lombok.Data;
 
 import java.io.Serializable;
-import lombok.Data;
 
 /**
  * 用户更新请求

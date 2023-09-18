@@ -1,4 +1,4 @@
-package com.yupi.yueoj.model.enums;
+package com.valley.yojbackendmodel.model.enums;
 
 import org.apache.commons.lang3.ObjectUtils;
 

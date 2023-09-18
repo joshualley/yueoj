@@ -1,4 +1,4 @@
-package com.yupi.yueoj.config;
+package com.valley.yojbackendcommon.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;

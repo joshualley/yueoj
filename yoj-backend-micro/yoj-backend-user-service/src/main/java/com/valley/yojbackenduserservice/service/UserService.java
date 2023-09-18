@@ -1,14 +1,15 @@
-package com.yupi.yueoj.service;
+package com.valley.yojbackenduserservice.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.yupi.yueoj.model.dto.user.UserQueryRequest;
-import com.yupi.yueoj.model.entity.User;
-import com.yupi.yueoj.model.vo.LoginUserVO;
-import com.yupi.yueoj.model.vo.UserVO;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
+import com.valley.yojbackendmodel.model.dto.user.UserQueryRequest;
+import com.valley.yojbackendmodel.model.entity.User;
+import com.valley.yojbackendmodel.model.vo.LoginUserVO;
+import com.valley.yojbackendmodel.model.vo.UserVO;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 用户服务

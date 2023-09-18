@@ -1,6 +1,6 @@
-package com.yupi.yueoj.model.dto.question;
+package com.valley.yojbackendmodel.model.dto.question;
 
-import com.yupi.yueoj.common.PageRequest;
+import com.valley.yojbackendcommon.common.PageRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

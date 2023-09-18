@@ -1,8 +1,8 @@
-package com.valley.yoj.exception;
+package com.valley.yojbackendcommon.exception;
 
-import com.valley.yoj.common.BaseResponse;
-import com.valley.yoj.common.ErrorCode;
-import com.valley.yoj.common.ResultUtils;
+import com.valley.yojbackendcommon.common.BaseResponse;
+import com.valley.yojbackendcommon.common.ErrorCode;
+import com.valley.yojbackendcommon.common.ResultUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

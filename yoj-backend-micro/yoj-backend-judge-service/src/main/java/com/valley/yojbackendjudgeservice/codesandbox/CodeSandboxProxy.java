@@ -1,7 +1,8 @@
-package com.yupi.yueoj.judge.codesandbox;
+package com.valley.yojbackendjudgeservice.codesandbox;
 
-import com.yupi.yueoj.judge.codesandbox.model.ExecuteCodeRequest;
-import com.yupi.yueoj.judge.codesandbox.model.ExecuteResponse;
+
+import com.valley.yojbackendmodel.model.codesandbox.ExecuteCodeRequest;
+import com.valley.yojbackendmodel.model.codesandbox.ExecuteResponse;
 import lombok.extern.slf4j.Slf4j;
 
 /**

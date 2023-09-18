@@ -1,4 +1,4 @@
-package com.valley.yoj.common;
+package com.valley.yojbackendcommon.common;
 
 import lombok.Data;
 

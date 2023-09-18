@@ -1,11 +1,11 @@
-package com.yupi.yueoj.judge.codesandbox.impl;
+package com.valley.yojbackendjudgeservice.codesandbox.impl;
 
-import com.yupi.yueoj.judge.codesandbox.CodeSandbox;
-import com.yupi.yueoj.judge.codesandbox.model.ExecuteCodeRequest;
-import com.yupi.yueoj.judge.codesandbox.model.ExecuteResponse;
-import com.yupi.yueoj.judge.codesandbox.model.JudgeInfo;
-import com.yupi.yueoj.model.enums.JudgeInfoMessageEnum;
-import com.yupi.yueoj.model.enums.QuestionSubmitStatusEnum;
+import com.valley.yojbackendjudgeservice.codesandbox.CodeSandbox;
+import com.valley.yojbackendmodel.model.codesandbox.ExecuteCodeRequest;
+import com.valley.yojbackendmodel.model.codesandbox.ExecuteResponse;
+import com.valley.yojbackendmodel.model.codesandbox.JudgeInfo;
+import com.valley.yojbackendmodel.model.enums.JudgeInfoMessageEnum;
+import com.valley.yojbackendmodel.model.enums.QuestionSubmitStatusEnum;
 
 import java.util.List;
 

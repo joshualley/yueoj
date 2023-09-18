@@ -1,4 +1,4 @@
-package com.yupi.yueoj.config;
+package com.valley.yojbackendcommon.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

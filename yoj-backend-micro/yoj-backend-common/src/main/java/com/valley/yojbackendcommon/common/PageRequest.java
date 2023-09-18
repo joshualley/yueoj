@@ -1,6 +1,6 @@
-package com.valley.yoj.common;
+package com.valley.yojbackendcommon.common;
 
-import com.valley.yoj.constant.CommonConstant;
+import com.valley.yojbackendcommon.constant.CommonConstant;
 import lombok.Data;
 
 /**

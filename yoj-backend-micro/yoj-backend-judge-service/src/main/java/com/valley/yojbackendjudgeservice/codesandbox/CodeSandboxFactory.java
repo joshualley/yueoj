@@ -1,12 +1,11 @@
-package com.yupi.yueoj.judge.codesandbox;
+package com.valley.yojbackendjudgeservice.codesandbox;
 
-import com.yupi.yueoj.common.ErrorCode;
-import com.yupi.yueoj.exception.BusinessException;
-import com.yupi.yueoj.judge.codesandbox.impl.ExampleCodeSandbox;
-import com.yupi.yueoj.judge.codesandbox.impl.RemoteCodeSandbox;
-import com.yupi.yueoj.judge.codesandbox.impl.ThirdPartyCodeSandbox;
-import com.yupi.yueoj.judge.codesandbox.model.ExecuteCodeRequest;
-import com.yupi.yueoj.judge.codesandbox.model.ExecuteResponse;
+
+import com.valley.yojbackendcommon.common.ErrorCode;
+import com.valley.yojbackendcommon.exception.BusinessException;
+import com.valley.yojbackendjudgeservice.codesandbox.impl.ExampleCodeSandbox;
+import com.valley.yojbackendjudgeservice.codesandbox.impl.RemoteCodeSandbox;
+import com.valley.yojbackendjudgeservice.codesandbox.impl.ThirdPartyCodeSandbox;
 
 /**
  * 代码沙箱工厂 (简单工厂)

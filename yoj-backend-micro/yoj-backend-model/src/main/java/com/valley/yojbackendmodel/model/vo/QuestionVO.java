@@ -1,12 +1,9 @@
-package com.yupi.yueoj.model.vo;
+package com.valley.yojbackendmodel.model.vo;
 
 import cn.hutool.json.JSONUtil;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.yupi.yueoj.model.dto.question.JudgeCase;
-import com.yupi.yueoj.model.dto.question.JudgeConfig;
-import com.yupi.yueoj.model.entity.Question;
+import com.valley.yojbackendmodel.model.dto.question.JudgeCase;
+import com.valley.yojbackendmodel.model.dto.question.JudgeConfig;
+import com.valley.yojbackendmodel.model.entity.Question;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 

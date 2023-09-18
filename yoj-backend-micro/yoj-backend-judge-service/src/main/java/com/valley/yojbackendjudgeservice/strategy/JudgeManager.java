@@ -1,11 +1,12 @@
-package com.yupi.yueoj.judge.strategy;
+package com.valley.yojbackendjudgeservice.strategy;
 
-import com.yupi.yueoj.common.ErrorCode;
-import com.yupi.yueoj.exception.BusinessException;
-import com.yupi.yueoj.judge.strategy.impl.DefaultJudgeStrategy;
-import com.yupi.yueoj.judge.strategy.impl.JavaJudgeStrategy;
-import com.yupi.yueoj.judge.codesandbox.model.JudgeInfo;
-import com.yupi.yueoj.model.enums.QuestionSubmitLanguageEnum;
+
+import com.valley.yojbackendcommon.common.ErrorCode;
+import com.valley.yojbackendcommon.exception.BusinessException;
+import com.valley.yojbackendjudgeservice.strategy.impl.DefaultJudgeStrategy;
+import com.valley.yojbackendjudgeservice.strategy.impl.JavaJudgeStrategy;
+import com.valley.yojbackendmodel.model.codesandbox.JudgeInfo;
+import com.valley.yojbackendmodel.model.enums.QuestionSubmitLanguageEnum;
 
 /**
  * 简化调用

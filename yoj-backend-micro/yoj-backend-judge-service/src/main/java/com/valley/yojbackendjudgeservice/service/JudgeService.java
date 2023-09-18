@@ -1,6 +1,7 @@
-package com.yupi.yueoj.judge;
+package com.valley.yojbackendjudgeservice.service;
 
-import com.yupi.yueoj.model.entity.QuestionSubmit;
+
+import com.valley.yojbackendmodel.model.entity.QuestionSubmit;
 
 /**
  * 判题服务
