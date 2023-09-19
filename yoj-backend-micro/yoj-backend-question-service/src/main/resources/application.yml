@@ -2,6 +2,10 @@
 spring:
   application:
     name: yoj-backend-question-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
   # 默认 dev 环境
   profiles:
     active: dev
@@ -44,6 +48,7 @@ server:
     session:
       cookie:
         max-age: 2592000
+        path: /api
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: false
@@ -82,6 +87,5 @@ cos:
     secretKey: xxx
     region: xxx
     bucket: xxx
-#代码沙箱配置
-codesandbox:
-  type: remote
+knife4j:
+  enable: true

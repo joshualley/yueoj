@@ -7,18 +7,15 @@ import com.valley.yojbackendmodel.model.entity.QuestionSubmit;
 import com.valley.yojbackendquestionservice.service.QuestionService;
 import com.valley.yojbackendquestionservice.service.QuestionSubmitService;
 import com.valley.yojbackendserviceclient.service.QuestionFeignClient;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
 /**
  * 仅供内部调用
  */
-@Controller("/inner")
+@RestController
+@RequestMapping("/inner")
 public class QuestionInnerController implements QuestionFeignClient {
     @Resource
     private QuestionService questionService;

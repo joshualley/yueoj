@@ -1,10 +1,10 @@
-package com.valley.yojbackenduserservice;
+package com.valley.yojbackendjudgeservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class YojBackendUserServiceApplicationTests {
+class JudgeServiceApplicationTests {
 
     @Test
     void contextLoads() {

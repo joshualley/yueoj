@@ -5,9 +5,10 @@ import com.valley.yojbackendcommon.exception.BusinessException;
 import com.valley.yojbackendmodel.model.entity.User;
 import com.valley.yojbackendserviceclient.service.UserFeignClient;
 import com.valley.yojbackenduserservice.service.UserService;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.Collection;
@@ -16,7 +17,8 @@ import java.util.List;
 /**
  * 该服务仅内部调用
  */
-@Controller("/inner")
+@RestController
+@RequestMapping("/inner")
 public class UserInnerController implements UserFeignClient {
 
     @Resource
