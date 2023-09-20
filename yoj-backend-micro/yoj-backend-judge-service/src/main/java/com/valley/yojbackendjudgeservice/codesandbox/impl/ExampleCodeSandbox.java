@@ -6,12 +6,14 @@ import com.valley.yojbackendmodel.model.codesandbox.ExecuteResponse;
 import com.valley.yojbackendmodel.model.codesandbox.JudgeInfo;
 import com.valley.yojbackendmodel.model.enums.JudgeInfoMessageEnum;
 import com.valley.yojbackendmodel.model.enums.QuestionSubmitStatusEnum;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
  * 示例代码沙箱
  */
+@Component
 public class ExampleCodeSandbox implements CodeSandbox {
     @Override
     public ExecuteResponse executeCode(ExecuteCodeRequest request) {

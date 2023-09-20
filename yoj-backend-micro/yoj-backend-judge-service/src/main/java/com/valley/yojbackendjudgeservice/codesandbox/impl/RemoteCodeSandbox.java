@@ -4,12 +4,14 @@ import com.valley.yojbackendjudgeservice.codesandbox.CodeSandbox;
 import com.valley.yojbackendmodel.model.codesandbox.ExecuteCodeRequest;
 import com.valley.yojbackendmodel.model.codesandbox.ExecuteResponse;
 import com.valley.yojbackendserviceclient.service.CodeSandboxFeignClient;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
 /**
  * 远程代码沙箱
  */
+@Component
 public class RemoteCodeSandbox implements CodeSandbox {
     @Resource
     private CodeSandboxFeignClient codeSandboxFeignClient;

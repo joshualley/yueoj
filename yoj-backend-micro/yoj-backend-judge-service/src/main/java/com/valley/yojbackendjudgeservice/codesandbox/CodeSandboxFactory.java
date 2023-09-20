@@ -3,6 +3,7 @@ package com.valley.yojbackendjudgeservice.codesandbox;
 
 import com.valley.yojbackendcommon.common.ErrorCode;
 import com.valley.yojbackendcommon.exception.BusinessException;
+import com.valley.yojbackendcommon.utils.BeanUtil;
 import com.valley.yojbackendjudgeservice.codesandbox.impl.ExampleCodeSandbox;
 import com.valley.yojbackendjudgeservice.codesandbox.impl.RemoteCodeSandbox;
 import com.valley.yojbackendjudgeservice.codesandbox.impl.ThirdPartyCodeSandbox;
@@ -20,11 +21,11 @@ public class CodeSandboxFactory {
         String t = type.toLowerCase();
         switch (t) {
             case "example":
-                return new ExampleCodeSandbox();
+                return BeanUtil.getBean(ExampleCodeSandbox.class);
             case "remote":
-                return new RemoteCodeSandbox();
+                return BeanUtil.getBean(RemoteCodeSandbox.class);
             case "third_party":
-                return new ThirdPartyCodeSandbox();
+                return BeanUtil.getBean(ThirdPartyCodeSandbox.class);
             default:
                 throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }

@@ -45,7 +45,7 @@ public class JavaJudgeStrategy implements JudgeStrategy {
         List<String> inputs = context.getInputs();
         List<String> outputs = sandCodeBoxResponse.getOutputs();
         // a. 先判断输出数量和预期数量是否相同
-        if (outputs.size() != inputs.size()) {
+        if (outputs == null || outputs.size() != inputs.size()) {
             judgeInfoResponse.setMessage(JudgeInfoMessageEnum.WRONG_ANSWER.getValue());
             return judgeInfoResponse;
         }

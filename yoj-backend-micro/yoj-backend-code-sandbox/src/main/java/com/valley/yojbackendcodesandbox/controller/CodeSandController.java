@@ -20,7 +20,7 @@ public class CodeSandController {
     @Resource(name = "docker")
     CodeSandboxService codeSandboxService;
 
-    @PostMapping("/codesandbox")
+    @PostMapping("/exec")
     public ExecuteResponse execCode(@RequestBody ExecuteCodeRequest executeCodeRequest,
                                     HttpServletRequest request, HttpServletResponse response) {
         String header = request.getHeader(CodeSandboxAuthConstant.AUTH_REQUEST_HEADER);
