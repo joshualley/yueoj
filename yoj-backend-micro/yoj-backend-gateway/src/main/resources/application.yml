@@ -24,6 +24,10 @@ spring:
           uri: lb://yoj-backend-judge-service
           predicates:
             - Path=/api/judge/**
+        - id: yoj-backend-code-sandbox
+          uri: lb://yoj-backend-code-sandbox
+          predicates:
+            - Path=/api/codesandbox/**
 knife4j:
   gateway:
     # ① 第一个配置，开启gateway聚合组件

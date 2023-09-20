@@ -7,10 +7,10 @@
         <artifactId>yoj-backend-micro</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <artifactId>yoj-backend-user-service</artifactId>
+    <artifactId>yoj-backend-code-sandbox</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>yoj-backend-user-service</name>
-    <description>yoj-backend-user-service</description>
+    <name>yoj-backend-code-sandbox</name>
+    <description>yoj-backend-code-sandbox</description>
     <properties>
         <java.version>1.8</java.version>
     </properties>
@@ -21,22 +21,25 @@
         </dependency>
 
         <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
 
         <dependency>
-            <groupId>com.github.xiaoymin</groupId>
-            <artifactId>knife4j-openapi2-spring-boot-starter</artifactId>
-            <version>4.3.0</version>
+            <groupId>com.github.docker-java</groupId>
+            <artifactId>docker-java</artifactId>
+            <version>3.3.3</version>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/com.github.binarywang/wx-java-mp-spring-boot-starter -->
         <dependency>
-            <groupId>com.github.binarywang</groupId>
-            <artifactId>wx-java-mp-spring-boot-starter</artifactId>
-            <version>4.4.0</version>
+            <groupId>com.github.docker-java</groupId>
+            <artifactId>docker-java-transport-httpclient5</artifactId>
+            <version>3.3.3</version>
         </dependency>
 
         <dependency>
@@ -54,7 +57,6 @@
             <artifactId>yoj-backend-service-client</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -62,6 +64,14 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
             </plugin>
         </plugins>
     </build>

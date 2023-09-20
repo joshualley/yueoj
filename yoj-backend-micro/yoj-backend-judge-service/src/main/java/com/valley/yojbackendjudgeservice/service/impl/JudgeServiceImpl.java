@@ -93,7 +93,21 @@ public class JudgeServiceImpl implements JudgeService {
                 .language(language)
                 .inputs(inputs)
                 .build();
-        ExecuteResponse response = codeSandboxProxy.executeCode(request);
+        ExecuteResponse response;
+        try {
+            response = codeSandboxProxy.executeCode(request);
+        } catch (BusinessException e) {
+            // 执行失败，则修改题目提交的判题状态为等待中
+            QuestionSubmit questionSubmitUpdate1 = new QuestionSubmit();
+            questionSubmitUpdate.setId(questionSubmitId);
+            questionSubmitUpdate.setStatus(QuestionSubmitStatusEnum.WAITING.getValue());
+            isUpdateSuccess = questionFeignClient.updateQuestionSubmitById(questionSubmitUpdate1);
+            if (!isUpdateSuccess) {
+                throw new BusinessException(ErrorCode.SYSTEM_ERROR, "题目判题状态更新失败");
+            }
+            throw new BusinessException(e.getCode(), "执行判题失败" + e.getMessage());
+        }
+
         // 3) 调用判题策略进行判题
         JudgeConfig judgeConfig = JSONUtil.toBean(question.getJudgeConfig(), JudgeConfig.class);
         JudgeContext judgeContext = JudgeContext.builder()

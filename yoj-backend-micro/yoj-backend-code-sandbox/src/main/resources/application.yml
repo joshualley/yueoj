@@ -1,0 +1,13 @@
+server:
+  port: 8105
+  servlet:
+    context-path: /api/codesandbox
+spring:
+  application:
+    name: yoj-backend-code-sandbox
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+knife4j:
+  enable: true
