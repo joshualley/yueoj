@@ -36,8 +36,9 @@ public class MessageConsumer {
             judgeService.doJudge(questionSubmitId);
             channel.basicAck(deliveryTag, false);
         } catch (Exception e) {
-            // 处理失败后重新处理
-            channel.basicNack(deliveryTag, false, true);
+            // 处理失败
+            channel.basicNack(deliveryTag, false, false);
+            log.info("消息处理失败: {}", e.getMessage());
         }
     }
 }
