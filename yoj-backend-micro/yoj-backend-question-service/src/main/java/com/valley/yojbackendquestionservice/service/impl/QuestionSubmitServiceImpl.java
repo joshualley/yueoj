@@ -18,6 +18,7 @@ import com.valley.yojbackendmodel.model.vo.QuestionSubmitVO;
 import com.valley.yojbackendmodel.model.vo.QuestionVO;
 import com.valley.yojbackendmodel.model.vo.UserVO;
 import com.valley.yojbackendquestionservice.mapper.QuestionSubmitMapper;
+import com.valley.yojbackendquestionservice.message.MessageProducer;
 import com.valley.yojbackendquestionservice.service.QuestionService;
 import com.valley.yojbackendquestionservice.service.QuestionSubmitService;
 import com.valley.yojbackendserviceclient.service.JudgeFeignClient;
@@ -31,7 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 /**
@@ -53,6 +53,9 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
     @Resource
     @Lazy
     private JudgeFeignClient judgeFeignClient;
+
+    @Resource
+    private MessageProducer messageProducer;
 
     /**
      * 题目提交
@@ -92,9 +95,11 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         }
         Long questionSubmitId = questionSubmit.getId();
         // 异步执行判题服务
-        CompletableFuture.runAsync(() -> {
-            judgeFeignClient.doJudge(questionSubmitId);
-        });
+//        CompletableFuture.runAsync(() -> {
+//            judgeFeignClient.doJudge(questionSubmitId);
+//        });
+        // 调用消息队列
+        messageProducer.send(String.valueOf(questionSubmitId));
         return questionSubmitId;
     }
 

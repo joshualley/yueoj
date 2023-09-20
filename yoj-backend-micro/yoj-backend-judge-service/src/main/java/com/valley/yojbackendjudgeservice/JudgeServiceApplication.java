@@ -1,5 +1,6 @@
 package com.valley.yojbackendjudgeservice;
 
+import com.valley.yojbackendjudgeservice.mesage.InitRabbitMq;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -17,6 +18,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class JudgeServiceApplication {
 
     public static void main(String[] args) {
+        InitRabbitMq.init();
         SpringApplication.run(JudgeServiceApplication.class, args);
     }
 

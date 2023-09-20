@@ -18,9 +18,9 @@ import com.valley.yojbackendmodel.model.entity.QuestionSubmit;
 import com.valley.yojbackendmodel.model.entity.User;
 import com.valley.yojbackendmodel.model.vo.QuestionSubmitVO;
 import com.valley.yojbackendmodel.model.vo.QuestionVO;
+import com.valley.yojbackendquestionservice.message.MessageProducer;
 import com.valley.yojbackendquestionservice.service.QuestionService;
 import com.valley.yojbackendquestionservice.service.QuestionSubmitService;
-import com.valley.yojbackendserviceclient.service.JudgeFeignClient;
 import com.valley.yojbackendserviceclient.service.UserFeignClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * 題目接口
@@ -52,7 +51,7 @@ public class QuestionController {
     private UserFeignClient userFeignClient;
 
     @Resource
-    private JudgeFeignClient judgeFeignClient;
+    private MessageProducer messageProducer;
 
     private final static Gson GSON = new Gson();
 
@@ -342,9 +341,11 @@ public class QuestionController {
     @PostMapping("/submit/do/judge")
     public BaseResponse<QuestionSubmitVO> doJudge(long id, HttpServletRequest request) {
         // 异步执行判题服务
-        CompletableFuture.runAsync(() -> {
-            judgeFeignClient.doJudge(id);
-        });
+//        CompletableFuture.runAsync(() -> {
+//            judgeFeignClient.doJudge(id);
+//        });
+        // 调用消息队列
+        messageProducer.send(String.valueOf(id));
         return getQuestionSubmitVOById(id, request);
     }
 }

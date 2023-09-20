@@ -1,1 +1,1 @@
-openapi --input http://localhost:8121/api/v2/api-docs --output ./src/api --client axios
+openapi --input http://localhost:8101/api/v2/api-docs --output ./src/api --client axios
