@@ -3,7 +3,9 @@ package com.valley.yojbackendcodesandbox.sevice.impl;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ArrayUtil;
 import com.valley.yojbackendcodesandbox.docker.MemoryCollector;
-import com.valley.yojbackendcodesandbox.utils.DockerUtil;
+import com.valley.yojbackendcodesandbox.docker.DockerUtil;
+import com.valley.yojbackendcommon.common.ErrorCode;
+import com.valley.yojbackendcommon.exception.BusinessException;
 import com.valley.yojbackendmodel.model.codesandbox.ExecuteMessage;
 import com.valley.yojbackendmodel.model.codesandbox.ExecuteResponse;
 import com.valley.yojbackendmodel.model.codesandbox.JudgeInfo;
@@ -22,7 +24,7 @@ import java.util.List;
  */
 @Service("docker")
 @Slf4j
-public class JavaDockerDockerCodeSandboxService extends AbstractDockerCodeSandboxService {
+public class JavaDockerSandbox extends AbstractDockerSandbox {
     /**
      * java代码的默认类名
      */
@@ -39,34 +41,53 @@ public class JavaDockerDockerCodeSandboxService extends AbstractDockerCodeSandbo
         // 初始化Docker容器
         String containerName = "java8";
         String imageName = "openjdk:8-alpine";
-        // 保存java代码文件的目录
-        SAVE_CODE_ROOT_PATH = System.getProperty("user.dir") + File.separator + "temp" + File.separator + "java";
-        // 判断存放代码的目录是否存在
-        if (!FileUtil.exist(SAVE_CODE_ROOT_PATH)) {
-            FileUtil.mkdir(SAVE_CODE_ROOT_PATH);
-        }
-        mContainerId = DockerUtil.initDockerContainer(
-                mDockerClient, imageName, containerName,
-                SAVE_CODE_ROOT_PATH, "/app");
+        mContainerId = DockerUtil.initDockerContainer(mDockerClient, imageName, containerName);
     }
 
     @Override
-    public File saveCodeToFile(String code, String codeParentDirName) {
-        String userCodeParentPath = SAVE_CODE_ROOT_PATH + File.separator + codeParentDirName;
+    public String saveCodeToFile(String code, String dirName) {
+        // 1. 创建本地文件夹
+        String codeLocDir = System.getProperty("user.dir") + File.separator + "temp" + File.separator + dirName;
+        // 判断本地存放代码的目录是否存在
+        if (!FileUtil.exist(codeLocDir)) {
+            FileUtil.mkdir(codeLocDir);
+        }
+        // 写入本地代码文件
+        String codeLocPath = codeLocDir + File.separator + CLASS_NAME + ".java";
+        File codeFile = FileUtil.writeString(code, codeLocPath, StandardCharsets.UTF_8);
+        // 2. 创建Docker文件夹，并将本地文件复制到docker
+        String codeDirPath = SAVE_CODE_ROOT_PATH + "/" + dirName;
         // 用户代码文件的路径
-        String userCodePath = userCodeParentPath + File.separator + CLASS_NAME + ".java";
-        return FileUtil.writeString(code, userCodePath, StandardCharsets.UTF_8);
+        String[] mkdirCmd = { "mkdir", codeDirPath };
+        log.info("创建代码文件夹：" + String.join(" ", mkdirCmd));
+        ExecuteMessage message = DockerUtil.execRunCmd(mDockerClient, mContainerId, mkdirCmd, 0);
+        if (message.getExitValue() != 0) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "创建代码文件夹失败: " + message.getOutput());
+        }
+        // 将本地代码文件复制到docker容器
+        String codeLocFilePath = codeFile.getAbsolutePath();
+        log.info("复制用户代码 {} 至容器 {}", codeLocFilePath, codeDirPath);
+        boolean success = DockerUtil.copyFileToContainer(mDockerClient, mContainerId, codeLocFilePath, codeDirPath);
+        // 删除本地文件
+        if (FileUtil.exist(codeFile)) {
+            FileUtil.del(codeFile.getParentFile());
+        }
+        if (!success) {
+            deleteCodeFile(codeDirPath);
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "复制用户代码至容器: " + message.getOutput());
+        }
+        return codeDirPath;
     }
 
     /**
      * 编译代码，得到class文件
      * @return
      */
-    public ExecuteMessage compile(String codeParentDirName) {
-        String cmdStr = String.format("javac -encoding utf-8 /app/%s/%s.java", codeParentDirName, CLASS_NAME);
+    public ExecuteMessage compile(String codeDirPath) {
+        String cmdStr = String.format("javac -encoding utf-8 %s/%s.java", codeDirPath, CLASS_NAME);
         log.info("编译用户代码：" + cmdStr);
         String[] cmd = cmdStr.split(" ");
-        return DockerUtil.execRunJavaCodeCmd(mDockerClient, mContainerId, cmd, 0);
+        return DockerUtil.execRunCmd(mDockerClient, mContainerId, cmd, 0);
     }
 
     /**
@@ -82,11 +103,11 @@ public class JavaDockerDockerCodeSandboxService extends AbstractDockerCodeSandbo
         for (String input : inputs) {
             // 传递执行java程序的命令
             // docker exec java8 java -cp /app Main [输入的参数，如: 1 3]
-            String[] cmd = {"java", "-cp", "/app/" + classPath, CLASS_NAME};
+            String[] cmd = {"java", "-cp", classPath, CLASS_NAME};
             // 将参数按空格拆分
             cmd = ArrayUtil.append(cmd, input.split(" "));
             log.info("运行用户代码: " + String.join(" ", cmd));
-            ExecuteMessage runOutput = DockerUtil.execRunJavaCodeCmd(mDockerClient, mContainerId, cmd, TIMEOUT);
+            ExecuteMessage runOutput = DockerUtil.execRunCmd(mDockerClient, mContainerId, cmd, TIMEOUT);
             runOutput.setMemory(memoryCollector.getMemoryUsage());
             if (runOutput.getExitValue() == 0) {
                 outputs.add(runOutput.getOutput());
@@ -121,6 +142,13 @@ public class JavaDockerDockerCodeSandboxService extends AbstractDockerCodeSandbo
         judgeInfo.setMemory(maxMemory);
         response.setJudgeInfo(judgeInfo);
         return response;
+    }
+
+    public void deleteCodeFile(String codeDirPath) {
+        String cmdStr = String.format("rm -rf %s", codeDirPath);
+        log.info("删除用户代码：" + cmdStr);
+        String[] cmd = cmdStr.split(" ");
+        DockerUtil.execRunCmd(mDockerClient, mContainerId, cmd, 0);
     }
 
 

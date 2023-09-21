@@ -18,11 +18,22 @@ public class DockerDemo {
                 .build();
         DockerDemo demo = new DockerDemo();
         demo.listContainers(client);
+
+        Container container = DockerUtil.findContainer(client, "java");
+        if (container != null) {
+            DockerUtil.copyFileToContainer(client, container.getId(),
+                    "E:\\WorkSpace\\ALearning\\OJ\\yue-oj-code-sandbox\\temp\\inject.txt",
+                    "/app");
+        }
+
+
     }
 
     public void listContainers(DockerClient client) {
-        ListContainersCmd listContainersCmd = client.listContainersCmd();
+        ListContainersCmd listContainersCmd = client.listContainersCmd().withShowAll(true);
         List<Container> containers = listContainersCmd.exec();
+        System.out.println(containers.get(0).getNames()[0] + "," + containers.get(0).getState());
+        System.out.println(containers.get(2).getNames()[0] + "," + containers.get(2).getState());
         List<String> containerNames = containers.stream()
                 .map((container) -> String.join(" ", container.getNames()))
                 .collect(Collectors.toList());

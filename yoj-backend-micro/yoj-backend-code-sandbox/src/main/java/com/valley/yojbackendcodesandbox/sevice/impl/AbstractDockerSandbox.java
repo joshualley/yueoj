@@ -1,6 +1,5 @@
 package com.valley.yojbackendcodesandbox.sevice.impl;
 
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.dfa.FoundWord;
 import cn.hutool.dfa.WordTree;
 import com.github.dockerjava.api.DockerClient;
@@ -13,16 +12,15 @@ import com.valley.yojbackendmodel.model.codesandbox.ExecuteResponse;
 import com.valley.yojbackendmodel.model.codesandbox.JudgeInfo;
 import com.valley.yojbackendmodel.model.codesandbox.enums.ExecuteStatusEnum;
 
-import java.io.File;
 import java.util.List;
 import java.util.UUID;
 
 
-public abstract class AbstractDockerCodeSandboxService implements CodeSandboxService {
+public abstract class AbstractDockerSandbox implements CodeSandboxService {
     /**
      * 保存代码文件的目录
      */
-    protected static String SAVE_CODE_ROOT_PATH;
+    protected static String SAVE_CODE_ROOT_PATH = "/app";
     /**
      * 程序执行超时时间
      */
@@ -43,7 +41,7 @@ public abstract class AbstractDockerCodeSandboxService implements CodeSandboxSer
 
     /**
      * 检查代码中操作的合法性
-     * @param code
+     * @param code 用户代码
      * @return
      */
     public boolean checkCodeLegality(String code) {
@@ -52,11 +50,19 @@ public abstract class AbstractDockerCodeSandboxService implements CodeSandboxSer
         return foundWord == null;
     }
 
-    public abstract File saveCodeToFile(String code, String codeParentDirName);
+    /**
+     * 将代码保存到文件中，便于后续执行编译
+     * @param code 代码
+     * @param dirName 保存代码的文件夹名称
+     * @return 容器中的代码文件夹全路径
+     */
+    public abstract String saveCodeToFile(String code, String dirName);
 
-    public abstract ExecuteMessage compile(String codeParentDirName);
+    public abstract ExecuteMessage compile(String codeDirPath);
 
     public abstract ExecuteResponse runInputCases(List<String> inputs, String classPath, MemoryCollector memoryCollector);
+
+    public abstract void deleteCodeFile(String codeDirPath);
 
     public ExecuteResponse executeCode(ExecuteCodeRequest request) {
         List<String> inputs = request.getInputs();
@@ -84,23 +90,22 @@ public abstract class AbstractDockerCodeSandboxService implements CodeSandboxSer
         MemoryCollector memoryCollector = mDockerClient.statsCmd(mContainerId).exec(new MemoryCollector());
         // 2. 保存并编译用户代码
         // 当前用户上传代码的文件夹名称
-        String userCodeParentDirName = UUID.randomUUID().toString();
-        File codeFile = saveCodeToFile(code, userCodeParentDirName);
-        ExecuteMessage compileOutput = compile(userCodeParentDirName);
+        String codeDirName = UUID.randomUUID().toString();
+        String codeDirPath = saveCodeToFile(code, codeDirName);
+        ExecuteMessage compileOutput = compile(codeDirPath);
         if (compileOutput.getExitValue() != 0) {
             response.setMessage(compileOutput.getError());
             // 返回错误状态
             response.setStatus(ExecuteStatusEnum.COMPILE_ERROR.getValue());
+            deleteCodeFile(codeDirPath);
             return response;
         }
         // 3. 编译成功后，执行代码，得到输出结果
-        response = runInputCases(inputs, userCodeParentDirName, memoryCollector);
+        response = runInputCases(inputs, codeDirPath, memoryCollector);
         // 关闭内存监听
         memoryCollector.close();
         // 4. 文件清理
-        if (codeFile.getParentFile() != null) {
-            FileUtil.del(codeFile.getParentFile());
-        }
+        deleteCodeFile(codeDirPath);
         return response;
     }
 }

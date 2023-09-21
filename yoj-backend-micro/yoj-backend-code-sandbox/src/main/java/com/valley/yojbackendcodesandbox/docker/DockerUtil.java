@@ -1,4 +1,4 @@
-package com.valley.yojbackendcodesandbox.utils;
+package com.valley.yojbackendcodesandbox.docker;
 
 import cn.hutool.core.date.StopWatch;
 import com.github.dockerjava.api.DockerClient;
@@ -6,13 +6,14 @@ import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.command.ExecCreateCmdResponse;
 import com.github.dockerjava.api.command.ExecStartCmd;
 import com.github.dockerjava.api.command.PullImageResultCallback;
-import com.github.dockerjava.api.model.*;
-import com.valley.yojbackendcodesandbox.docker.ResultCollector;
+import com.github.dockerjava.api.model.Container;
+import com.github.dockerjava.api.model.HostConfig;
+import com.github.dockerjava.api.model.Image;
+import com.github.dockerjava.api.model.PullResponseItem;
 import com.valley.yojbackendmodel.model.codesandbox.ExecuteMessage;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 public class DockerUtil {
 
@@ -21,19 +22,12 @@ public class DockerUtil {
      * @param client
      * @param imageName
      * @param containerName
-     * @param hostPath
-     * @param volumePath
      * @return
      */
-    public static String initDockerContainer(
-            DockerClient client, String imageName, String containerName,
-            String hostPath, String volumePath) {
-        List<Image> images = client.listImagesCmd().exec();
-        List<String> imageNames = images.stream()
-                .map((image) -> String.join(" ", image.getRepoTags()))
-                .collect(Collectors.toList());
+    public static String initDockerContainer(DockerClient client, String imageName, String containerName) {
+        Image image = findImage(client, imageName);
         // 1. 如果镜像不存在，拉取java镜像
-        if (!imageNames.contains(imageName)) {
+        if (image == null) {
             try {
                 client.pullImageCmd(imageName).exec(new PullImageResultCallback() {
                     @Override
@@ -48,19 +42,11 @@ public class DockerUtil {
             }
         }
         // 2. 如果容器不存在，创建容器
-        List<Container> containers = client.listContainersCmd().exec();
-        String containerId = null;
-        for (Container container : containers) {
-            // 如果存在容器，则获取容器ID
-            if (String.join(" ", container.getNames()).contains(containerName)) {
-                containerId = container.getId();
-                break;
-            }
-        }
-        if (containerId == null) {
+        Container container = findContainer(client, containerName);
+        if (container == null) {
             HostConfig hostConfig = new HostConfig();
             // 将用户代码的路径映射到docker容器中的 /app 目录下
-            hostConfig.setBinds(new Bind(hostPath, new Volume(volumePath)));
+            // hostConfig.setBinds(new Bind(hostPath, new Volume(volumePath)));
             // 限制容器内存 1000 M
             hostConfig.withMemory(1000 * 1024 * 1024L);
             // 限制仅能使用单核cpu
@@ -82,11 +68,65 @@ public class DockerUtil {
                     .withTty(true)
                     .exec();
             // 获取容器ID
-            containerId = containerResponse.getId();
-            // 3. 启动容器
+            String containerId = containerResponse.getId();
+            // 启动容器
             client.startContainerCmd(containerId).exec();
+            return containerId;
+        } else {
+            // 容器存在时，检查容器是否运行，未运行则启动容器
+            if (container.getState().equals("exited")) {
+                // 启动容器
+                client.startContainerCmd(container.getId()).exec();
+            }
+            return container.getId();
         }
-        return containerId;
+    }
+
+    /**
+     * 查找镜像
+     * @param client
+     * @param imageName
+     * @return
+     */
+    public static Image findImage(DockerClient client, String imageName) {
+        List<Image> images = client.listImagesCmd().exec();
+        for (Image image : images) {
+            if (String.join(" ", image.getRepoTags()).contains(imageName)) {
+                return image;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 查找容器
+     * @param client
+     * @param containerName
+     * @return
+     */
+    public static Container findContainer(DockerClient client, String containerName) {
+        List<Container> containers = client.listContainersCmd()
+                .withShowAll(true)
+                .exec();
+        for (Container container : containers) {
+            if (String.join(" ", container.getNames()).contains(containerName)) {
+                return container;
+            }
+        }
+        return null;
+    }
+
+    public static boolean copyFileToContainer(DockerClient client, String containerId, String hostPath, String remotePath) {
+        try {
+            client.copyArchiveToContainerCmd(containerId)
+                    .withHostResource(hostPath)
+                    .withRemotePath(remotePath)
+                    .exec();
+        } catch (Exception e) {
+            System.out.println("复制文件到Docker失败:" + e.getMessage());
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -97,7 +137,7 @@ public class DockerUtil {
      * @param timeout
      * @return
      */
-    public static ExecuteMessage execRunJavaCodeCmd(DockerClient client, String containerId, String[] cmd, long timeout) {
+    public static ExecuteMessage execRunCmd(DockerClient client, String containerId, String[] cmd, long timeout) {
         ExecCreateCmdResponse execCreateCmdResponse = client.execCreateCmd(containerId)
                 .withCmd(cmd)
                 .withAttachStdin(true)

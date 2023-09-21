@@ -48,7 +48,7 @@
             >
           </div>
           <a-button
-            v-if="questionSubmit?.status === 0 || questionSubmit?.status === 1"
+            v-if="questionSubmit?.status !== 1"
             type="primary"
             @click="onJudgeQuestion"
             >重新判题</a-button

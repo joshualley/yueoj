@@ -22,7 +22,7 @@ import java.util.UUID;
  * Java原生实现的java代码沙箱
  */
 @Service("native")
-public class JavaNativeCodeSandboxService implements CodeSandboxService {
+public class JavaNativeSandbox implements CodeSandboxService {
 
     /**
      * 保持存java代码文件的更目录
