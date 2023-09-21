@@ -39,7 +39,7 @@ public class JavaDockerSandbox extends AbstractDockerSandbox {
         ));
 
         // 初始化Docker容器
-        String containerName = "java8";
+        String containerName = "judge-java8";
         String imageName = "openjdk:8-alpine";
         mContainerId = DockerUtil.initDockerContainer(mDockerClient, imageName, containerName);
     }

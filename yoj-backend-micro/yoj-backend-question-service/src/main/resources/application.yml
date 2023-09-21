@@ -5,7 +5,7 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 127.0.0.1:8848
+        server-addr: 0.0.0.0:8848
   # 默认 dev 环境
   profiles:
     active: dev
@@ -23,19 +23,19 @@ spring:
   # todo 需替换配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/yue_oj_db
+    url: jdbc:mysql://0.0.0.0:3306/yue_oj_db
     username: root
     password: 12345
   # Redis 配置
   # todo 需替换配置，然后取消注释
   redis:
     database: 1
-    host: localhost
+    host: 0.0.0.0
     port: 6379
     timeout: 5000
     password: 123456
   rabbitmq:
-    host: localhost
+    host: 0.0.0.0
     port: 5672
     username: guest
     password: guest

@@ -5,12 +5,9 @@
     <parent>
         <groupId>com.valley</groupId>
         <artifactId>yoj-backend-micro</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
     <artifactId>yoj-backend-gateway</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>yoj-backend-gateway</name>
-    <description>yoj-backend-gateway</description>
     <properties>
         <java.version>1.8</java.version>
     </properties>
@@ -52,11 +49,15 @@
         </dependencies>
     </dependencyManagement>
 
+    <packaging>jar</packaging>
     <build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.valley.yojbackendgateway.GatewayApplication</mainClass>
+                </configuration>
             </plugin>
         </plugins>
     </build>

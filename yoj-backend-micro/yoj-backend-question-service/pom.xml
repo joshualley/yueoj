@@ -5,12 +5,9 @@
     <parent>
         <groupId>com.valley</groupId>
         <artifactId>yoj-backend-micro</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
     <artifactId>yoj-backend-question-service</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>yoj-backend-question-service</name>
-    <description>yoj-backend-question-service</description>
     <properties>
         <java.version>1.8</java.version>
     </properties>
@@ -41,26 +38,30 @@
         <dependency>
             <groupId>com.valley</groupId>
             <artifactId>yoj-backend-common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.valley</groupId>
             <artifactId>yoj-backend-model</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.valley</groupId>
             <artifactId>yoj-backend-service-client</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>1.0.0</version>
         </dependency>
 
     </dependencies>
 
+    <packaging>jar</packaging>
     <build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.valley.yojbackendquestionservice.QuestionServiceApplication</mainClass>
+                </configuration>
             </plugin>
         </plugins>
     </build>

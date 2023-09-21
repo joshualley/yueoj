@@ -21,7 +21,7 @@ public class InitRabbitMq {
     public static void init() {
         try {
             ConnectionFactory factory = new ConnectionFactory();
-            factory.setHost("localhost");
+            factory.setHost("0.0.0.0");
             factory.setPort(5672);
             Connection connection = factory.newConnection();
             Channel channel = connection.createChannel();
