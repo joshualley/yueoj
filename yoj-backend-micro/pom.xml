@@ -3,10 +3,10 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.valley</groupId>
-    <artifactId>yoj-backend-micro</artifactId>
+    <artifactId>yoj-micro</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
-    <name>yoj-backend-micro</name>
+    <name>yoj-micro</name>
     <description>YueOJ微服务后端项目</description>
     <modules>
         <module>yoj-backend-common</module>

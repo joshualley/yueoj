@@ -1,3 +1,5 @@
+# IP
+host-ip: 192.168.0.110
 server:
   port: 8101
 spring:
@@ -8,7 +10,7 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 0.0.0.0:8848
+        server-addr: ${host-ip}:8848
     gateway:
       routes:
         - id: yoj-backend-user-service

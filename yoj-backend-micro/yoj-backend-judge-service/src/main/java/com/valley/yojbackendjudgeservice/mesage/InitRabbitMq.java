@@ -5,6 +5,10 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.valley.yojbackendcommon.constant.RabbitMqConstant;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
@@ -13,15 +17,19 @@ import java.util.concurrent.TimeoutException;
  * 初始化消息队列
  */
 @Slf4j
-public class InitRabbitMq {
+@Component
+public class InitRabbitMq implements ApplicationListener<ContextRefreshedEvent> {
+
+    @Value("${host-ip}")
+    private String hostIP;
 
     /**
      * 启动消息队列
      */
-    public static void init() {
+    public void init() {
         try {
             ConnectionFactory factory = new ConnectionFactory();
-            factory.setHost("0.0.0.0");
+            factory.setHost(hostIP);
             factory.setPort(5672);
             Connection connection = factory.newConnection();
             Channel channel = connection.createChannel();
@@ -31,9 +39,16 @@ public class InitRabbitMq {
             channel.queueDeclare(RabbitMqConstant.QUEUE_NAME, true, false, false, null);
             channel.queueBind(RabbitMqConstant.QUEUE_NAME, RabbitMqConstant.EXCHANGE_NAME, RabbitMqConstant.ROUTING_KEY);
 
-            log.info("RabbitMQ启动成功");
+            log.info("RabbitMQ启动成功: {}:5672", hostIP);
         } catch (IOException | TimeoutException e) {
             log.error("初始RabbitMQ失败：", e);
+        }
+    }
+
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        if (event.getApplicationContext().getParent() == null) {
+            init();
         }
     }
 }

@@ -1,7 +1,6 @@
 package com.valley.yojbackendjudgeservice;
 
 import com.binarywang.spring.starter.wxjava.mp.config.WxMpAutoConfiguration;
-import com.valley.yojbackendjudgeservice.mesage.InitRabbitMq;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -23,7 +22,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class JudgeServiceApplication {
 
     public static void main(String[] args) {
-        InitRabbitMq.init();
         SpringApplication.run(JudgeServiceApplication.class, args);
     }
 

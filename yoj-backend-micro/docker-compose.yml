@@ -1,0 +1,37 @@
+version: '3'
+services:
+  # 网关
+  yoj-gateway:
+    build: /yoj-backend-gateway
+    container_name: yoj-gateway
+    ports:
+      - "8101:8101"
+    restart: always
+  # 用户服务
+  yoj-user-service:
+    build: /yoj-backend-user-service
+    container_name: yoj-user-service
+    ports:
+      - "8102:8102"
+    restart: always
+  # 题目服务
+  yoj-question-service:
+    build: /yoj-backend-question-service
+    container_name: yoj-question-service
+    ports:
+      - "8103:8103"
+    restart: always
+  # 判题服务
+  yoj-judge-service:
+    build: /yoj-backend-judge-service
+    container_name: yoj-judge-service
+    ports:
+      - "8104:8104"
+    restart: always
+  # 判题服务
+  yoj-code-sandbox:
+    build: /yoj-backend-code-sandbox
+    container_name: yoj-code-sandbox
+    ports:
+      - "8105:8105"
+    restart: always

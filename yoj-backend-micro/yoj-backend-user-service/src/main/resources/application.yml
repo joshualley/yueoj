@@ -1,3 +1,5 @@
+# IP
+host-ip: 192.168.0.110
 # 公共配置文件
 spring:
   application:
@@ -5,7 +7,7 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 0.0.0.0:8848
+        server-addr: ${host-ip}:8848
   # 默认 dev 环境
   profiles:
     active: dev
@@ -23,14 +25,14 @@ spring:
   # todo 需替换配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://0.0.0.0:3306/yue_oj_db
+    url: jdbc:mysql://${host-ip}:3306/yue_oj_db
     username: root
     password: 12345
   # Redis 配置
   # todo 需替换配置，然后取消注释
   redis:
     database: 1
-    host: 0.0.0.0
+    host: ${host-ip}
     port: 6379
     timeout: 5000
     password: 123456
@@ -70,7 +72,7 @@ wx:
       http-client-type: HttpClient
       key-prefix: wx
       redis:
-        host: 127.0.0.1
+        host: ${host-ip}
         port: 6379
       type: Memory
   # 微信开放平台
