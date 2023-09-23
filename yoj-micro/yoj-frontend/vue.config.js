@@ -7,4 +7,19 @@ module.exports = defineConfig({
     // 整合MonacoEditor
     config.plugin("monaco").use(new MonacoWebpackPlugin({}));
   },
+  publicPath: "./",
+  outputDir: "dist",
+  assetsDir: "static",
+  indexPath: "index.html",
+  devServer: {
+    allowedHosts: [
+        "valleys.qicp.vip",
+    ],
+    proxy: {
+      "/api": {
+        target: "http://192.168.0.110:8101",
+        changeOrigin: true,
+      }
+    },
+  },
 });

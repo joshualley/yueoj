@@ -11,4 +11,4 @@ ADD /yoj-backend-user-service/target/yoj-backend-user-service-1.0.0.jar yoj-user
 
 EXPOSE 8102
 
-CMD java -jar yoj-user-service.jar > user_service.log 2>&1 &
+CMD java -jar yoj-user-service.jar

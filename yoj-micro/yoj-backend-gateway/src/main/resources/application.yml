@@ -1,6 +1,7 @@
 # IP
 host-ip: 192.168.0.110
 server:
+  address: 0.0.0.0
   port: 8101
 spring:
   application:
@@ -11,6 +12,8 @@ spring:
     nacos:
       discovery:
         server-addr: ${host-ip}:8848
+        ip: ${host-ip}
+        port: ${server.port}
     gateway:
       routes:
         - id: yoj-backend-user-service

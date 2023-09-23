@@ -11,4 +11,4 @@ ADD /yoj-backend-code-sandbox/target/yoj-backend-code-sandbox-1.0.0.jar yoj-code
 
 EXPOSE 8105
 
-CMD java -jar yoj-code-sandbox.jar > code_sandbox.log 2>&1 &
+CMD java -jar yoj-code-sandbox.jar

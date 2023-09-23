@@ -1,37 +1,53 @@
 version: '3'
 services:
   # 网关
-  yoj-gateway:
-    build: /yoj-backend-gateway
+  gateway:
+    build:
+      context: ./
+      dockerfile: ./yoj-backend-gateway/Dockerfile
     container_name: yoj-gateway
     ports:
       - "8101:8101"
-    restart: always
+    restart: no
   # 用户服务
-  yoj-user-service:
-    build: /yoj-backend-user-service
+  user-service:
+    build:
+      context: ./
+      dockerfile: ./yoj-backend-user-service/Dockerfile
     container_name: yoj-user-service
     ports:
       - "8102:8102"
-    restart: always
+    restart: no
   # 题目服务
-  yoj-question-service:
-    build: /yoj-backend-question-service
+  question-service:
+    build:
+      context: ./
+      dockerfile: ./yoj-backend-question-service/Dockerfile
     container_name: yoj-question-service
     ports:
       - "8103:8103"
-    restart: always
+    restart: no
   # 判题服务
-  yoj-judge-service:
-    build: /yoj-backend-judge-service
+  judge-service:
+    build:
+      context: ./
+      dockerfile: ./yoj-backend-judge-service/Dockerfile
     container_name: yoj-judge-service
     ports:
       - "8104:8104"
-    restart: always
-  # 判题服务
-  yoj-code-sandbox:
-    build: /yoj-backend-code-sandbox
-    container_name: yoj-code-sandbox
+    restart: no
+  # 代码沙箱服务
+#  code-sandbox:
+#    build:
+#      context: ./
+#      dockerfile: ./yoj-backend-code-sandbox/Dockerfile
+#    container_name: yoj-code-sandbox
+#    ports:
+#      - "8105:8105"
+#    restart: no
+  frontend:
+    build: ./yoj-frontend
+    container_name: yoj-frontend
     ports:
-      - "8105:8105"
-    restart: always
+      - "8080:8080"
+    restart: no

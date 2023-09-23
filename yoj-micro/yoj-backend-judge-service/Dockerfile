@@ -11,4 +11,4 @@ ADD /yoj-backend-judge-service/target/yoj-backend-judge-service-1.0.0.jar yoj-ju
 
 EXPOSE 8104
 
-CMD java -jar yoj-judge-service.jar > judge_service.log 2>&1 &
+CMD java -jar yoj-judge-service.jar

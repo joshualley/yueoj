@@ -7,7 +7,7 @@
     <version>1.0.0</version>
     <packaging>pom</packaging>
     <name>yoj-micro</name>
-    <description>YueOJ微服务后端项目</description>
+    <description>YueOJ微服务项目</description>
     <modules>
         <module>yoj-backend-common</module>
         <module>yoj-backend-model</module>

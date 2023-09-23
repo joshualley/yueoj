@@ -8,6 +8,8 @@ spring:
     nacos:
       discovery:
         server-addr: ${host-ip}:8848
+        ip: ${host-ip}
+        port: ${server.port}
   # 默认 dev 环境
   profiles:
     active: dev

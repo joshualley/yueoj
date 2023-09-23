@@ -30,7 +30,7 @@ public abstract class AbstractDockerSandbox implements CodeSandboxService {
      * Docker客户端
      */
     final protected static DockerClient mDockerClient = DockerClientBuilder
-            .getInstance("tcp://127.0.0.1:2375")
+            .getInstance("tcp://192.168.0.110:2375")
             .build();
     /**
      * Docker容器ID
