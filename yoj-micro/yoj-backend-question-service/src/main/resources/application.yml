@@ -1,5 +1,5 @@
 # IP
-host-ip: 192.168.0.110
+host-ip: 192.168.0.116
 # 公共配置文件
 spring:
   application:
@@ -49,6 +49,7 @@ spring:
       # 大小限制
       max-file-size: 10MB
 server:
+  address: 0.0.0.0
   port: 8103
   servlet:
     context-path: /api/question

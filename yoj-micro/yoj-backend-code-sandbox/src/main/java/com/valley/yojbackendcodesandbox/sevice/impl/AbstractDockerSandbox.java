@@ -11,10 +11,11 @@ import com.valley.yojbackendmodel.model.codesandbox.ExecuteMessage;
 import com.valley.yojbackendmodel.model.codesandbox.ExecuteResponse;
 import com.valley.yojbackendmodel.model.codesandbox.JudgeInfo;
 import com.valley.yojbackendmodel.model.codesandbox.enums.ExecuteStatusEnum;
+import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
+import org.springframework.core.io.ClassPathResource;
 
 import java.util.List;
 import java.util.UUID;
-
 
 public abstract class AbstractDockerSandbox implements CodeSandboxService {
     /**
@@ -29,9 +30,16 @@ public abstract class AbstractDockerSandbox implements CodeSandboxService {
     /**
      * Docker客户端
      */
-    final protected static DockerClient mDockerClient = DockerClientBuilder
-            .getInstance("tcp://192.168.0.110:2375")
-            .build();
+    protected static DockerClient mDockerClient;
+
+    static {
+        YamlPropertiesFactoryBean factory = new YamlPropertiesFactoryBean();
+        factory.setResources(new ClassPathResource("application.yml"));
+        String hostIP = factory.getObject().getProperty("host-ip");
+        mDockerClient = DockerClientBuilder
+                .getInstance("tcp://" + hostIP + ":2375")
+                .build();
+    }
     /**
      * Docker容器ID
      */

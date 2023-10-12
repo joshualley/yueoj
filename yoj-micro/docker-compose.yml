@@ -37,14 +37,14 @@ services:
       - "8104:8104"
     restart: no
   # 代码沙箱服务
-#  code-sandbox:
-#    build:
-#      context: ./
-#      dockerfile: ./yoj-backend-code-sandbox/Dockerfile
-#    container_name: yoj-code-sandbox
-#    ports:
-#      - "8105:8105"
-#    restart: no
+  code-sandbox:
+    build:
+      context: ./
+      dockerfile: ./yoj-backend-code-sandbox/Dockerfile
+    container_name: yoj-code-sandbox
+    ports:
+      - "8105:8105"
+    restart: no
   frontend:
     build: ./yoj-frontend
     container_name: yoj-frontend

@@ -59,7 +59,7 @@ public class DockerUtil {
                     // 关闭网络
                     .withNetworkDisabled(true)
                     // 限制用户不能向root根目录写文件
-                    .withReadonlyRootfs(true)
+                    // .withReadonlyRootfs(true)
                     // 设置控制台输出
                     .withAttachStdin(true)
                     .withAttachStdout(true)
