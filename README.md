@@ -14,24 +14,24 @@
 
 2. 浏览题目
 
-   ![image-20231012160628174](E:\WorkSpace\ALearning\OJ\images\浏览题目.png)
+   ![image-20231012160628174](images/浏览题目.png)
 
 3. 做题
 
-   ![image-20231012160854152](E:\WorkSpace\ALearning\OJ\images\做题.png)
+   ![image-20231012160854152](images/做题.png)
 
 4. 提交记录列表
 
-   ![image-20231012161049610](E:\WorkSpace\ALearning\OJ\images\提交记录列表.png)
+   ![image-20231012161049610](images/提交记录列表.png)
 
 5. 查看提交记录
 
-   ![image-20231012161558103](E:\WorkSpace\ALearning\OJ\images\查看提交记录.png)
+   ![image-20231012161558103](images/查看提交记录.png)
 
 6. 管理题目列表
 
-   ![image-20231012161723476](E:\WorkSpace\ALearning\OJ\images\管理题目列表.png)
+   ![image-20231012161723476](images/管理题目列表.png)
 
 7. 修改题目
 
-   ![image-20231012162023167](E:\WorkSpace\ALearning\OJ\images\修改题目.png)
+   ![image-20231012162023167](images/修改题目.png)
