@@ -6,6 +6,14 @@
 >
 > 项目中单独实现了编译代码的代码沙箱功能。
 
+### 演示地址
+
+[http://i7zkc9.natappfree.cc](http://i7zkc9.natappfree.cc)
+
+> 用户名：Admin
+>
+> 密码：12345678
+
 ### 效果展示
 
 1. 登录

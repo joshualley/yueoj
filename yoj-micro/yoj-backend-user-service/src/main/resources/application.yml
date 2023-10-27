@@ -1,5 +1,6 @@
 # IP
-host-ip: 192.168.0.116
+host-ip: 192.168.0.122
+#host-ip: 192.168.0.116
 # 公共配置文件
 spring:
   application:
@@ -29,7 +30,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${host-ip}:3306/yue_oj_db
     username: root
-    password: 12345
+    password: 123456
   # Redis 配置
   # todo 需替换配置，然后取消注释
   redis:
@@ -44,7 +45,6 @@ spring:
       # 大小限制
       max-file-size: 10MB
 server:
-  address: 0.0.0.0
   port: 8102
   servlet:
     context-path: /api/user

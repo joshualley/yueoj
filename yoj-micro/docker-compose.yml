@@ -8,7 +8,7 @@ services:
     container_name: yoj-gateway
     ports:
       - "8101:8101"
-    restart: no
+    restart: "no"
   # 用户服务
   user-service:
     build:
@@ -17,7 +17,7 @@ services:
     container_name: yoj-user-service
     ports:
       - "8102:8102"
-    restart: no
+    restart: "no"
   # 题目服务
   question-service:
     build:
@@ -26,7 +26,7 @@ services:
     container_name: yoj-question-service
     ports:
       - "8103:8103"
-    restart: no
+    restart: "no"
   # 判题服务
   judge-service:
     build:
@@ -35,7 +35,7 @@ services:
     container_name: yoj-judge-service
     ports:
       - "8104:8104"
-    restart: no
+    restart: "no"
   # 代码沙箱服务
   code-sandbox:
     build:
@@ -44,10 +44,10 @@ services:
     container_name: yoj-code-sandbox
     ports:
       - "8105:8105"
-    restart: no
+    restart: "no"
   frontend:
     build: ./yoj-frontend
     container_name: yoj-frontend
     ports:
-      - "8080:8080"
-    restart: no
+      - "8088:8088"
+    restart: "no"

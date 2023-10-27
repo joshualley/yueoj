@@ -6,10 +6,9 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.valley.yojbackendcommon.constant.RabbitMqConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
@@ -18,14 +17,15 @@ import java.util.concurrent.TimeoutException;
  */
 @Slf4j
 @Component
-public class InitRabbitMq implements ApplicationListener<ContextRefreshedEvent> {
+public class InitRabbitMq {
 
-    @Value("${host-ip}")
+    @Value("${spring.rabbitmq.host:localhost}")
     private String hostIP;
 
     /**
      * 启动消息队列
      */
+    @PostConstruct
     public void init() {
         try {
             ConnectionFactory factory = new ConnectionFactory();
@@ -42,13 +42,6 @@ public class InitRabbitMq implements ApplicationListener<ContextRefreshedEvent> 
             log.info("RabbitMQ启动成功: {}:5672", hostIP);
         } catch (IOException | TimeoutException e) {
             log.error("初始RabbitMQ失败：", e);
-        }
-    }
-
-    @Override
-    public void onApplicationEvent(ContextRefreshedEvent event) {
-        if (event.getApplicationContext().getParent() == null) {
-            init();
         }
     }
 }
