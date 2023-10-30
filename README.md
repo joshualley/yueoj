@@ -8,11 +8,11 @@
 
 ### 演示地址
 
-[http://i7zkc9.natappfree.cc](http://i7zkc9.natappfree.cc)
+[http://valleys.nat300.top](http://valleys.nat300.top)
 
-> 用户名：Admin
+> 用户名:  Admin
 >
-> 密码：12345678
+> 密    码: 12345678
 
 ### 效果展示
 
