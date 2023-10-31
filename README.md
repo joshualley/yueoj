@@ -8,7 +8,7 @@
 
 ### 演示地址
 
-[http://valleys.nat300.top](http://valleys.nat300.top)
+[https://valleys.mynatapp.cc](https://valleys.mynatapp.cc)
 
 > 用户名:  Admin
 >

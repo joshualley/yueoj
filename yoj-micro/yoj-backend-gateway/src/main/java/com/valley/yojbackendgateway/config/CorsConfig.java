@@ -24,9 +24,10 @@ public class CorsConfig {
         config.setAllowCredentials(true);
         // 实际上线时改为真实域名
         config.setAllowedOriginPatterns(Arrays.asList(
-                "*",
-                "http://nccaq8.natappfree.cc",
-                "http://192.168.0.122:8088"
+                "http://valleys.nat300.top",
+                "https://valleys.mynatapp.cc",
+                "http://192.168.0.122:8088",
+                "https://valleys.qicp.vip"
         ));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource(new PathPatternParser());

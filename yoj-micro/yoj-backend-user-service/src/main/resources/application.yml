@@ -53,6 +53,9 @@ server:
       cookie:
         max-age: 2592000
         path: /api
+        same-site: none
+        domain: valleys.mynatapp.cc
+        secure: true
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: false

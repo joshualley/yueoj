@@ -2,7 +2,6 @@
 #host-ip: 192.168.0.116
 host-ip: 192.168.0.122
 server:
-  address: 0.0.0.0
   port: 8105
   servlet:
     context-path: /api/codesandbox
